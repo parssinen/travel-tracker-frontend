@@ -7,6 +7,14 @@ const mapStyles = {
   height: '100%'
 }
 
+const inlineStyle = {
+  modal : {
+    
+    marginTop: '-250px',
+    display: 'fixed !important'
+  }
+}
+
 export class MapContainer extends Component {
   state = {
     showingInfoWindow: false,  //Hides or the shows the infoWindow
@@ -65,10 +73,9 @@ export class MapContainer extends Component {
   render() {
     return (<div>
       <Modal
-        basic size='fullscreen'
         open={this.state.modalOpen}
         onClose={this.handleClose}
-        centered={false}
+        style={inlineStyle.modal}
         closeIcon
       >    <Modal.Header>Select a Photo</Modal.Header>
         <Modal.Content image>
