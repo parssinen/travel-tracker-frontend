@@ -1,81 +1,11 @@
 import React from 'react'
-import {
-  Button,
-  Form,
-  Grid,
-  Icon,
-  Header,
-  Image,
-  Message,
-  Segment
-} from 'semantic-ui-react'
-
-const LoginForm = ({ onSubmit, handleChange, username, password }) => {
-  return (
-    <div className='login-form'>
-      <style>{`
-      body > div,
-      body > div > div,
-      body > div > div > div.login-form {
-        height: 100%;
-      }
-    `}</style>
-      <Grid
-        textAlign='center'
-        style={{ height: '100%' }}
-        verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as='h2' color='blue' textAlign='center'>
-            <Icon name='plane' /> Log in to account
-          </Header>
-          <Form
-            onSubmit={onSubmit}
-            size='large' /*loading success error field error*/
-          >
-            <Segment>
-              <Form.Input
-                fluid
-                icon='user'
-                name='username'
-                iconPosition='left'
-                placeholder='Username'
-                defaultValue={username}
-                onChange={handleChange}
-              />
-              <Form.Input
-                fluid
-                icon='lock'
-                name='password'
-                iconPosition='left'
-                placeholder='Password'
-                type='password'
-                defaultValue={password}
-                onChange={handleChange}
-              />
-
-              <Button color='blue' fluid size='large' tyoe='submit'>
-                Login
-              </Button>
-            </Segment>
-          </Form>
-          <Message>
-            <a href='#'>Create Account</a>
-          </Message>
-        </Grid.Column>
-      </Grid>
-    </div>
-  )
-}
-export default LoginForm
-
-/*import React from 'react'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import loginService from './services/login'
-import blogService from './services/blogs'
+import blogService from '../src/services/travels'
 
 class App extends React.Component {
   constructor(props) {
@@ -85,11 +15,17 @@ class App extends React.Component {
       password: '',
       blogs: [],
       user: null,
+      newTitle: '',
+      newAuthor: '',
+      newUrl: '',
       loginVisible: false,
       message: '',
       color: ''
     }
   }
+
+  componentDidMount = async () => {
+    const compare = (a, b) => a.likes > b.likes ? -1 : 1
 
     const data = await blogService.getAll()
     const blogs = data
@@ -196,4 +132,3 @@ class App extends React.Component {
 }
 
 export default App
-*/

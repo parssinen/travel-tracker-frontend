@@ -1,25 +1,125 @@
 import React, { Component } from 'react'
 import GoogleApiWrapper from './GoogleApiWrapper'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { Container, Divider } from 'semantic-ui-react'
+import {
+  Container,
+  Divider,
+  Modal,
+  Header,
+  Image,
+  Grid,
+  Form,
+  Segment,
+  Icon,
+  Button,
+  Message
+} from 'semantic-ui-react'
 import dataService from './services/Data'
 import AddMenu from './components/AddMenu'
 import AddRouting from './components/AddRouting'
 import LoginForm from './LoginForm'
+import travelService from './services/travels'
+import loginService from './services/login'
+import Notification from './Notification'
+
+const inlineStyle = {
+  modal: {
+    marginTop: '-250px',
+    display: 'fixed !important'
+  }
+}
 
 export class App extends Component {
   state = {
-    loggedIn: true
+    user: null,
+    username: '',
+    password: '',
+    color: '',
+    message: ''
+  }
+
+  handleFieldChange = event => {
+    console.log('here')
+    this.setState({ [event.target.name]: event.target.defaultValue })
+  }
+  componentDidMount = async () => {
+    /*const data = await blogService.getAll()
+    const blogs = data
+      .sort(compare)
+      .map(blog =>
+        <Blog
+          key={blog.id}
+          id={blog.id}
+          user={blog.user}
+          likes={blog.likes}
+          author={blog.author}
+          title={blog.title}
+          url={blog.url}
+        />
+      )
+
+    this.setState({ blogs })*/
+
+    const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
+    if (loggedInUserJSON) {
+      const user = JSON.parse(loggedInUserJSON)
+      this.setState({ user })
+      travelService.setToken(user.token)
+    }
+  }
+
+  logout = () => () => {
+    travelService.setToken(null)
+    window.localStorage.removeItem('loggedInUser')
+    this.notify(`${this.state.user.username} logged out succesfully!`, 'green')
+    this.setState({ user: null })
+  }
+
+  notify = (message, color) => {
+    this.setState({ message, color })
+    setTimeout(() => {
+      this.setState({
+        message: null,
+        color: null
+      })
+    }, 2000)
+  }
+
+  login = async event => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username: this.state.username,
+        password: this.state.password
+      })
+
+      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
+      travelService.setToken(user.token)
+      this.setState({ username: '', password: '', user: user })
+      this.notify(`${this.state.user.username} logged in succesfully!`, 'green')
+    } catch (exception) {
+      console.log(exception)
+      this.notify('invalid username or password!', 'red')
+    }
   }
 
   render() {
-    return this.state.loggedIn ? (
+    console.log(this.state.username, this.state.password)
+    return this.state.user !== null ? (
       <GoogleApiWrapper
         apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
         language={'en'}
       />
     ) : (
-      <LoginForm />
+      <div>
+        <Notification message={this.state.message} color={this.state.color} />
+        <LoginForm
+          onSubmit={this.login}
+          handleChange={this.handleFieldChange}
+          username={this.state.username}
+          password={this.state.password}
+        />
+      </div>
     )
   }
 }
