@@ -65,7 +65,7 @@ const RegistrationForm = ({
                 iconPosition='left'
                 placeholder='Repeat password'
                 type='password'
-                defaultValue={password2}
+                value={password2}
                 onChange={handleChange}
               />
               <Button color='blue' fluid size='large' type='submit'>

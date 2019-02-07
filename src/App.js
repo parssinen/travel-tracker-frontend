@@ -74,11 +74,12 @@ export class App extends Component {
     }
   }
 
-  logout = () => () => {
+  logout = () => {
     travelService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
     this.notify(`${this.state.user.username} logged out succesfully!`, 'green')
     this.setState({ user: null })
+    console.log('hoidettu')
   }
 
   notify = (message, color) => {
@@ -137,45 +138,78 @@ export class App extends Component {
   }
 
   render() {
+    console.log('THE USER IS', this.state.user)
+    const user = this.state.user !== null
     return (
       <Router>
-        {/*this.state.user !== null ? (
-          <GoogleApiWrapper
-            apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
-            language={'en'}
-        />*/}
-
         <Container>
           <Divider hidden />
           <Notification message={this.state.message} color={this.state.color} />
-          <Route exact path='/' render={() => <Redirect to='/login' />} />
+          <Route
+            exact
+            path='/'
+            render={
+              user
+                ? () => <Redirect to='/map' />
+                : () => <Redirect to='/login' />
+            }
+          />
           <Route
             path='/login'
-            render={() => (
-              <LoginForm
-                onSubmit={this.login}
-                handleChange={this.handleFieldChange}
-                username={this.state.username}
-                password={this.state.password}
-              />
-            )}
+            render={
+              user
+                ? () => <Redirect to='/map' />
+                : () => (
+                    <LoginForm
+                      onSubmit={this.login}
+                      handleChange={this.handleFieldChange}
+                      username={this.state.username}
+                      password={this.state.password}
+                    />
+                  )
+            }
           />
           <Route
             path='/create'
-            render={() => (
-              <RegistrationForm
-                onSubmit={this.register}
-                handleChange={this.handleFieldChange}
-                username={this.state.newUsername}
-                password={this.state.newPassword}
-                password2={this.state.newPassword2}
-              />
-            )}
+            render={
+              user
+                ? () => <Redirect to='/map' />
+                : () => (
+                    <RegistrationForm
+                      onSubmit={this.register}
+                      handleChange={this.handleFieldChange}
+                      username={this.state.newUsername}
+                      password={this.state.newPassword}
+                      password2={this.state.newPassword2}
+                    />
+                  )
+            }
+          />
+          <Route
+            path='/map'
+            render={
+              user
+                ? () => <Map user={this.state.user} action={this.logout} />
+                : () => <Redirect to='/' />
+            }
           />
         </Container>
       </Router>
     )
   }
+}
+
+const Map = ({ user, action }) => {
+  return (
+    <div>
+      <Button onClick={action}>Log out</Button>
+      <GoogleApiWrapper
+        user={user}
+        apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
+        language={'en'}
+      />
+    </div>
+  )
 }
 
 export default App

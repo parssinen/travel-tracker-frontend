@@ -11,9 +11,11 @@ import {
   Button
 } from 'semantic-ui-react'
 
+import MessageBlock from './MessageBlock'
+
 const mapStyles = {
-  width: '100%',
-  height: '100%'
+  width: 'auto',
+  height: 'auto'
 }
 
 const inlineStyle = {
@@ -24,18 +26,22 @@ const inlineStyle = {
 }
 
 export class MapContainer extends Component {
-  state = {
-    showingInfoWindow: false, //Hides or the shows the infoWindow
-    activeMarker: {}, //Shows the active marker upon click
-    selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
-    modalOpen: false,
-    markers: [
-      {
-        title: 'Tässä on nuppi',
-        name: 'The marker`s title will appear as a tooltip.',
-        position: { lat: 37.778519, lng: -122.40564 }
-      }
-    ]
+  constructor(props) {
+    super(props)
+    this.state = {
+      user: this.props.user,
+      showingInfoWindow: false, //Hides or the shows the infoWindow
+      activeMarker: {}, //Shows the active marker upon click
+      selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
+      modalOpen: false,
+      markers: [
+        {
+          title: 'Tässä on nuppi',
+          name: 'The marker`s title will appear as a tooltip.',
+          position: { lat: 37.778519, lng: -122.40564 }
+        }
+      ]
+    }
   }
 
   onMarkerClick = (props, marker, e) =>
@@ -100,7 +106,7 @@ export class MapContainer extends Component {
               src='https://react.semantic-ui.com/images/avatar/large/rachel.png'
             />
             <Modal.Description>
-              <Header>Default Profile Image</Header>
+              <Header>Owner: {this.state.user.username}</Header>
               <p>
                 We've found the following gravatar image associated with your
                 e-mail address.
@@ -115,6 +121,7 @@ export class MapContainer extends Component {
           style={mapStyles}
           initialCenter={{ lat: 0, lng: 0 }}
           onClick={this.onMapClicked}>
+          <MessageBlock name={this.state.user.username} />
           {/*<InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
