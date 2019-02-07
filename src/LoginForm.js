@@ -9,7 +9,7 @@ import {
   Message,
   Segment
 } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const LoginForm = ({ onSubmit, handleChange, username, password }) => {
   return (
@@ -40,7 +40,7 @@ const LoginForm = ({ onSubmit, handleChange, username, password }) => {
                 name='username'
                 iconPosition='left'
                 placeholder='Username'
-                defaultValue={username}
+                value={username}
                 onChange={handleChange}
               />
               <Form.Input
@@ -50,11 +50,10 @@ const LoginForm = ({ onSubmit, handleChange, username, password }) => {
                 iconPosition='left'
                 placeholder='Password'
                 type='password'
-                defaultValue={password}
+                value={password}
                 onChange={handleChange}
               />
-
-              <Button color='blue' fluid size='large' tyoe='submit'>
+              <Button color='blue' fluid size='large' type='submit'>
                 Login
               </Button>
             </Segment>

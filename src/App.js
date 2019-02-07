@@ -19,9 +19,10 @@ import dataService from './services/Data'
 import AddMenu from './components/AddMenu'
 import AddRouting from './components/AddRouting'
 import LoginForm from './LoginForm'
-import CreateForm from './CreateForm'
+import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
 import loginService from './services/login'
+import userService from './services/users.js'
 import Notification from './Notification'
 
 const inlineStyle = {
@@ -35,14 +36,17 @@ export class App extends Component {
   state = {
     user: null,
     username: '',
+    newUsername: '',
+    newPassword: '',
+    newPassword2: '',
     password: '',
     color: '',
     message: ''
   }
 
   handleFieldChange = event => {
-    console.log('here')
-    this.setState({ [event.target.name]: event.target.defaultValue })
+    console.log(event.target.value)
+    this.setState({ [event.target.name]: event.target.value })
   }
   componentDidMount = async () => {
     /*const data = await blogService.getAll()
@@ -101,35 +105,49 @@ export class App extends Component {
       this.notify(`${this.state.user.username} logged in succesfully!`, 'green')
     } catch (exception) {
       console.log(exception)
-      this.notify('invalid username or password!', 'red')
+      this.notify('invalid username or password, try again!', 'red')
+      this.setState({ username: '', password: '' })
+    }
+  }
+
+  register = async event => {
+    event.preventDefault()
+    const password = this.state.newPassword
+    if (password !== this.state.newPassword2) {
+      this.notify("Passwords don't match!", 'red')
+    } else if (password.length < 3) {
+      this.notify('Password must be at least 3 characters long!', 'red')
+    } else {
+      this.createAccount()
+    }
+  }
+
+  createAccount = async () => {
+    try {
+      const user = await userService.create({
+        username: this.state.newUsername,
+        password: this.state.newPassword
+      })
+      this.notify(`account ${this.state.newUsername} created!`, 'green')
+      this.setState({ newUsername: '', newPassword: '', newPassword2: '' })
+    } catch (exception) {
+      console.log(exception)
+      this.notify('server error!', 'red')
     }
   }
 
   render() {
-    console.log(this.state.username, this.state.password)
     return (
       <Router>
         {/*this.state.user !== null ? (
           <GoogleApiWrapper
             apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
             language={'en'}
-          />
-        ) : (
-          <div>
-            <Notification
-              message={this.state.message}
-              color={this.state.color}
-            />
-            <LoginForm
-              onSubmit={this.login}
-              handleChange={this.handleFieldChange}
-              username={this.state.username}
-              password={this.state.password}
-            />
-          </div>
-        )*/}
+        />*/}
 
         <Container>
+          <Divider hidden />
+          <Notification message={this.state.message} color={this.state.color} />
           <Route exact path='/' render={() => <Redirect to='/login' />} />
           <Route
             path='/login'
@@ -142,45 +160,22 @@ export class App extends Component {
               />
             )}
           />
-          <Route path='/create' render={() => <CreateForm />} />
+          <Route
+            path='/create'
+            render={() => (
+              <RegistrationForm
+                onSubmit={this.register}
+                handleChange={this.handleFieldChange}
+                username={this.state.newUsername}
+                password={this.state.newPassword}
+                password2={this.state.newPassword2}
+              />
+            )}
+          />
         </Container>
       </Router>
     )
   }
 }
-
-/*class App extends Component {
-  state = {
-    english: false,
-    data: {
-      en: { bio: [], skills: [], experience: [] },
-      fi: { bio: [], skills: [], experience: [] }
-    }
-  }
-
-  async componentWillMount() {
-    const data = await dataService.getData()
-    this.setState({ data })
-  }
-
-  changeLanguage = () => this.setState({ english: !this.state.english })
-
-  render() {
-    return (
-      <Router>
-        <Container>
-          <Divider hidden />
-          <AddMenu en={this.state.english} change={this.changeLanguage} />
-          <Divider hidden />
-          <Divider hidden />
-          <AddRouting en={this.state.english} data={this.state.data} />
-          <Divider hidden />
-          <Divider hidden />
-          <Divider hidden />
-        </Container>
-      </Router>
-    )
-  }
-}*/
 
 export default App

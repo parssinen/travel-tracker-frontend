@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react'
-import { Item, Grid, Link, Icon, Image, Header, Modal, Button } from 'semantic-ui-react'
+import {
+  Item,
+  Grid,
+  Link,
+  Icon,
+  Image,
+  Header,
+  Modal,
+  Button
+} from 'semantic-ui-react'
 
 const mapStyles = {
   width: '100%',
@@ -8,8 +17,7 @@ const mapStyles = {
 }
 
 const inlineStyle = {
-  modal : {
-    
+  modal: {
     marginTop: '-250px',
     display: 'fixed !important'
   }
@@ -17,15 +25,17 @@ const inlineStyle = {
 
 export class MapContainer extends Component {
   state = {
-    showingInfoWindow: false,  //Hides or the shows the infoWindow
-    activeMarker: {},          //Shows the active marker upon click
-    selectedPlace: {},         //Shows the infoWindow to the selected place upon a marker
+    showingInfoWindow: false, //Hides or the shows the infoWindow
+    activeMarker: {}, //Shows the active marker upon click
+    selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
     modalOpen: false,
-    markers: [{
-      title: "Tässä on nuppi",
-      name: "The marker`s title will appear as a tooltip.",
-      position: { lat: 37.778519, lng: -122.40564 }
-    }]
+    markers: [
+      {
+        title: 'Tässä on nuppi',
+        name: 'The marker`s title will appear as a tooltip.',
+        position: { lat: 37.778519, lng: -122.40564 }
+      }
+    ]
   }
 
   onMarkerClick = (props, marker, e) =>
@@ -60,10 +70,13 @@ export class MapContainer extends Component {
 
   renderMarkers = () => {
     const markers = this.state.markers
-    return markers.map(marker => <Marker
-      name={marker.name}
-      position={marker.position}
-      onClick={this.onMarkerClick} />)
+    return markers.map(marker => (
+      <Marker
+        name={marker.name}
+        position={marker.position}
+        onClick={this.onMarkerClick}
+      />
+    ))
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
@@ -71,28 +84,38 @@ export class MapContainer extends Component {
   handleClose = () => this.setState({ modalOpen: false })
 
   render() {
-    return (<div>
-      <Modal
-        open={this.state.modalOpen}
-        onClose={this.handleClose}
-        style={inlineStyle.modal}
-        closeIcon
-      >    <Modal.Header>Select a Photo</Modal.Header>
-        <Modal.Content image>
-          <Image wrapped size='medium' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
-          <Modal.Description>
-            <Header>Default Profile Image</Header>
-            <p>We've found the following gravatar image associated with your e-mail address.</p>
-            <p>Is it okay to use this photo?</p>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-      <Map google={this.props.google}
-        zoom={2}
-        style={mapStyles}
-        initialCenter={{ lat: 0, lng: 0 }}
-        onClick={this.onMapClicked}>
-        {/*<InfoWindow
+    return (
+      <div>
+        <Modal
+          open={this.state.modalOpen}
+          onClose={this.handleClose}
+          style={inlineStyle.modal}
+          closeIcon>
+          {' '}
+          <Modal.Header>Select a Photo</Modal.Header>
+          <Modal.Content image>
+            <Image
+              wrapped
+              size='medium'
+              src='https://react.semantic-ui.com/images/avatar/large/rachel.png'
+            />
+            <Modal.Description>
+              <Header>Default Profile Image</Header>
+              <p>
+                We've found the following gravatar image associated with your
+                e-mail address.
+              </p>
+              <p>Is it okay to use this photo?</p>
+            </Modal.Description>
+          </Modal.Content>
+        </Modal>
+        <Map
+          google={this.props.google}
+          zoom={2}
+          style={mapStyles}
+          initialCenter={{ lat: 0, lng: 0 }}
+          onClick={this.onMapClicked}>
+          {/*<InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
           onClose={this.onClose}
@@ -109,8 +132,10 @@ export class MapContainer extends Component {
               </Button></div>
           </Item>
           </InfoWindow>*/}
-        {this.renderMarkers()}
-      </Map ></div>)
+          {this.renderMarkers()}
+        </Map>
+      </div>
+    )
   }
 }
 
@@ -118,5 +143,3 @@ export default GoogleApiWrapper(({ apiKey, language }) => ({
   apiKey: apiKey,
   language: language
 }))(MapContainer)
-
-
