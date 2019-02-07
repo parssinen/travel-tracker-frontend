@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import GoogleApiWrapper from './GoogleApiWrapper'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
 import {
   Container,
   Divider,
   Modal,
   Header,
+  Link,
   Image,
   Grid,
   Form,
@@ -18,6 +19,7 @@ import dataService from './services/Data'
 import AddMenu from './components/AddMenu'
 import AddRouting from './components/AddRouting'
 import LoginForm from './LoginForm'
+import CreateForm from './CreateForm'
 import travelService from './services/travels'
 import loginService from './services/login'
 import Notification from './Notification'
@@ -105,21 +107,44 @@ export class App extends Component {
 
   render() {
     console.log(this.state.username, this.state.password)
-    return this.state.user !== null ? (
-      <GoogleApiWrapper
-        apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
-        language={'en'}
-      />
-    ) : (
-      <div>
-        <Notification message={this.state.message} color={this.state.color} />
-        <LoginForm
-          onSubmit={this.login}
-          handleChange={this.handleFieldChange}
-          username={this.state.username}
-          password={this.state.password}
-        />
-      </div>
+    return (
+      <Router>
+        {/*this.state.user !== null ? (
+          <GoogleApiWrapper
+            apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
+            language={'en'}
+          />
+        ) : (
+          <div>
+            <Notification
+              message={this.state.message}
+              color={this.state.color}
+            />
+            <LoginForm
+              onSubmit={this.login}
+              handleChange={this.handleFieldChange}
+              username={this.state.username}
+              password={this.state.password}
+            />
+          </div>
+        )*/}
+
+        <Container>
+          <Route exact path='/' render={() => <Redirect to='/login' />} />
+          <Route
+            path='/login'
+            render={() => (
+              <LoginForm
+                onSubmit={this.login}
+                handleChange={this.handleFieldChange}
+                username={this.state.username}
+                password={this.state.password}
+              />
+            )}
+          />
+          <Route path='/create' render={() => <CreateForm />} />
+        </Container>
+      </Router>
     )
   }
 }

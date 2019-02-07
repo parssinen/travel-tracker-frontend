@@ -9,6 +9,7 @@ import {
   Message,
   Segment
 } from 'semantic-ui-react'
+import {Link} from 'react-router-dom'
 
 const LoginForm = ({ onSubmit, handleChange, username, password }) => {
   return (
@@ -59,7 +60,7 @@ const LoginForm = ({ onSubmit, handleChange, username, password }) => {
             </Segment>
           </Form>
           <Message>
-            <a href='#'>Create Account</a>
+            <Link to='/create'>Create Account</Link>
           </Message>
         </Grid.Column>
       </Grid>

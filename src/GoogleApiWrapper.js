@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react'
-import { Item, Grid, Icon, Image, Header, Modal, Button } from 'semantic-ui-react'
+import { Item, Grid, Link, Icon, Image, Header, Modal, Button } from 'semantic-ui-react'
 
 const mapStyles = {
   width: '100%',
