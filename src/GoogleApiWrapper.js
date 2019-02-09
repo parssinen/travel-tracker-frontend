@@ -97,7 +97,6 @@ export class MapContainer extends Component {
           onClose={this.handleClose}
           style={inlineStyle.modal}
           closeIcon>
-          {' '}
           <Modal.Header>Select a Photo</Modal.Header>
           <Modal.Content image>
             <Image
@@ -115,13 +114,13 @@ export class MapContainer extends Component {
             </Modal.Description>
           </Modal.Content>
         </Modal>
+        <MessageBlock name={this.state.user.username} />
         <Map
           google={this.props.google}
           zoom={2}
           style={mapStyles}
           initialCenter={{ lat: 0, lng: 0 }}
           onClick={this.onMapClicked}>
-          <MessageBlock name={this.state.user.username} />
           {/*<InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
