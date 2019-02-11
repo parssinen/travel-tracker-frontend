@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import GoogleApiWrapper from './GoogleApiWrapper'
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  withRouter,
+  Redirect,
+  Route
+} from 'react-router-dom'
 import {
   Container,
   Divider,
@@ -41,8 +46,7 @@ export class App extends Component {
     newPassword2: '',
     password: '',
     color: '',
-    message: ''
-  }
+    message: ''  }
 
   handleFieldChange = event => {
     console.log(event.target.value)
@@ -130,18 +134,22 @@ export class App extends Component {
         password: this.state.newPassword
       })
       this.notify(`account ${this.state.newUsername} created!`, 'green')
-      this.setState({ newUsername: '', newPassword: '', newPassword2: '' })
+      this.setState({
+        newUsername: '',
+        newPassword: '',
+        newPassword2: ''
+      })
     } catch (exception) {
       console.log(exception)
       this.notify('server error!', 'red')
     }
+    this.props.history.push('/login')
   }
 
   render() {
     console.log('THE USER IS', this.state.user)
     const user = this.state.user !== null
     return (
-      <Router>
         <Container>
           <Divider hidden />
           <Notification message={this.state.message} color={this.state.color} />
@@ -176,7 +184,7 @@ export class App extends Component {
                 ? () => <Redirect to='/map' />
                 : () => (
                     <RegistrationForm
-                      onSubmit={this.register}
+                      onSubmit={this.register.bind(this)}
                       handleChange={this.handleFieldChange}
                       username={this.state.newUsername}
                       password={this.state.newPassword}
@@ -194,7 +202,6 @@ export class App extends Component {
             }
           />
         </Container>
-      </Router>
     )
   }
 }
@@ -212,4 +219,4 @@ const Map = ({ user, action }) => {
   )
 }
 
-export default App
+export default withRouter(App)

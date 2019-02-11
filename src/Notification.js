@@ -2,13 +2,15 @@ import React from 'react'
 import { Message, Container, Icon } from 'semantic-ui-react'
 
 const Notification = ({ message, color }) => {
+  const icon = color === 'red' ? 'warning sign' : 'thumbs up'
+  const header = color === 'red' ? 'Warning!' : 'Success!'
   if (message) {
     return (
       <Message
-        icon='warning sign'
+        icon={icon}
         size='big'
         color={color}
-        header={'Warning!'}
+        header={header}
         content={message}
         warning
       />
