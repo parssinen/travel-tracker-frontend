@@ -8,14 +8,15 @@ import {
   Image,
   Header,
   Modal,
-  Button
+  Button,
+  Container
 } from 'semantic-ui-react'
 
 import MessageBlock from './MessageBlock'
 
 const mapStyles = {
-  width: 'auto',
-  height: 'auto'
+  width: '75%',
+  height: '75%'
 }
 
 const inlineStyle = {
@@ -91,7 +92,15 @@ export class MapContainer extends Component {
 
   render() {
     return (
-      <div>
+      <div
+        style={{
+          height: 350,
+          width: '100%',
+          display: 'flex',
+          flexFlow: 'row nowrap',
+          justifyContent: 'center',
+          padding: 0
+        }}>
         <Modal
           open={this.state.modalOpen}
           onClose={this.handleClose}
@@ -114,11 +123,10 @@ export class MapContainer extends Component {
             </Modal.Description>
           </Modal.Content>
         </Modal>
-        <MessageBlock name={this.state.user.username} />
+        {/*<MessageBlock name={this.state.user.username} />*/}
         <Map
           google={this.props.google}
           zoom={2}
-          style={mapStyles}
           initialCenter={{ lat: 0, lng: 0 }}
           onClick={this.onMapClicked}>
           {/*<InfoWindow

@@ -59,7 +59,7 @@ const LoginForm = ({ onSubmit, handleChange, username, password }) => {
             </Segment>
           </Form>
           <Message>
-            <Link to='/create'>Create Account</Link>
+            <Link to='/create'>Create new account</Link>
           </Message>
         </Grid.Column>
       </Grid>

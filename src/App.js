@@ -46,7 +46,8 @@ export class App extends Component {
     newPassword2: '',
     password: '',
     color: '',
-    message: ''  }
+    message: ''
+  }
 
   handleFieldChange = event => {
     console.log(event.target.value)
@@ -150,66 +151,74 @@ export class App extends Component {
     console.log('THE USER IS', this.state.user)
     const user = this.state.user !== null
     return (
-        <Container>
-          <Divider hidden />
-          <Notification message={this.state.message} color={this.state.color} />
-          <Route
-            exact
-            path='/'
-            render={
-              user
-                ? () => <Redirect to='/map' />
-                : () => <Redirect to='/login' />
-            }
-          />
-          <Route
-            path='/login'
-            render={
-              user
-                ? () => <Redirect to='/map' />
-                : () => (
-                    <LoginForm
-                      onSubmit={this.login}
-                      handleChange={this.handleFieldChange}
-                      username={this.state.username}
-                      password={this.state.password}
-                    />
-                  )
-            }
-          />
-          <Route
-            path='/create'
-            render={
-              user
-                ? () => <Redirect to='/map' />
-                : () => (
-                    <RegistrationForm
-                      onSubmit={this.register.bind(this)}
-                      handleChange={this.handleFieldChange}
-                      username={this.state.newUsername}
-                      password={this.state.newPassword}
-                      password2={this.state.newPassword2}
-                    />
-                  )
-            }
-          />
-          <Route
-            path='/map'
-            render={
-              user
-                ? () => <Map user={this.state.user} action={this.logout} />
-                : () => <Redirect to='/' />
-            }
-          />
-        </Container>
+      <Container>
+        <Notification message={this.state.message} color={this.state.color} />
+        <Route
+          exact
+          path='/'
+          render={
+            user ? () => <Redirect to='/map' /> : () => <Redirect to='/login' />
+          }
+        />
+        <Route
+          path='/login'
+          render={
+            user
+              ? () => <Redirect to='/map' />
+              : () => (
+                  <LoginForm
+                    onSubmit={this.login}
+                    handleChange={this.handleFieldChange}
+                    username={this.state.username}
+                    password={this.state.password}
+                  />
+                )
+          }
+        />
+        <Route
+          path='/create'
+          render={
+            user
+              ? () => <Redirect to='/map' />
+              : () => (
+                  <RegistrationForm
+                    onSubmit={this.register.bind(this)}
+                    handleChange={this.handleFieldChange}
+                    username={this.state.newUsername}
+                    password={this.state.newPassword}
+                    password2={this.state.newPassword2}
+                  />
+                )
+          }
+        />
+        <Route
+          path='/map'
+          render={
+            user
+              ? () => (
+                  <Map
+                    user={this.state.user}
+                    logout={this.logout}
+                    settings={this.logout}
+                  />
+                )
+              : () => <Redirect to='/' />
+          }
+        />
+      </Container>
     )
   }
 }
 
-const Map = ({ user, action }) => {
+const Map = ({ user, logout, settings }) => {
   return (
-    <div>
-      <Button onClick={action}>Log out</Button>
+    <div
+      style={{
+        width: '100%',
+        marginLeft: 0
+      }}>
+      {/*<Button onClick={logout}>Log out</Button>
+      <Button onClick={settings}>Settings</Button>*/}
       <GoogleApiWrapper
         user={user}
         apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
