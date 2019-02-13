@@ -53,6 +53,7 @@ export class App extends Component {
     console.log(event.target.value)
     this.setState({ [event.target.name]: event.target.value })
   }
+
   componentDidMount = async () => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
