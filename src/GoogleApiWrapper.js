@@ -21,7 +21,7 @@ const mapStyles = {
 
 const inlineStyle = {
   modal: {
-    marginTop: '-250px',
+    marginTop: '-200px',
     display: 'fixed !important'
   }
 }
@@ -54,6 +54,25 @@ export class MapContainer extends Component {
     this.setState({ markers })
   }
 
+  updateMarker = async () => {}
+
+  removeMarker = async () => {
+    const toRemove = this.state.activeMarker
+    if (window.confirm(`Remove ${toRemove.title}?`)) {
+      try {
+        const travel = await travelService.remove(toRemove.id)
+        const markers = this.state.markers.filter(m => m.id !== toRemove.id)
+        await this.setState({ markers })
+      } catch (exception) {
+        console.log(exception)
+      }
+      await this.setState({
+        activeMarker: {},
+        modalOpen: false
+      })
+    }
+  }
+
   onMarkerClick = async (props, marker, e) => {
     const lat = props.position.lat
     const lng = props.position.lng
@@ -61,7 +80,7 @@ export class MapContainer extends Component {
       marker => marker.position.lat === lat && marker.position.lng === lng
     )
     console.log('clicked', clickedMarker)
-    this.setState({
+    await this.setState({
       selectedPlace: props,
       activeMarker: clickedMarker,
       modalOpen: true
@@ -72,6 +91,7 @@ export class MapContainer extends Component {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
+        activeMarker: {},
         modalOpen: false
       })
     }
@@ -83,15 +103,13 @@ export class MapContainer extends Component {
     try {
       const travel = await travelService.create(newMarker)
       await this.setState({
-        markers: this.state.markers.concat(travel)
+        markers: this.state.markers.concat(travel),
+        activeMarker: travel,
+        modalOpen: true
       })
     } catch (exception) {
       console.log(exception)
     }
-    await this.setState({
-      activeMarker: newMarker,
-      modalOpen: true
-    })
   }
 
   onMapClicked = (t, map, coord) => {
@@ -99,7 +117,7 @@ export class MapContainer extends Component {
     const lat = latLng.lat()
     const lng = latLng.lng()
     const newMarker = {
-      title: 'add title...',
+      title: 'moi',
       text: 'add text...',
       position: {
         lat,
@@ -130,7 +148,8 @@ export class MapContainer extends Component {
   handleClose = () => this.setState({ modalOpen: false })
 
   render() {
-    console.log('active', this.state.activeMarker)
+    console.log(this.state.markers)
+    console.log(this.state.activeMarker)
     return (
       <div
         style={{
@@ -146,6 +165,7 @@ export class MapContainer extends Component {
           close={this.handleClose}
           inlineStyle={inlineStyle}
           marker={this.state.activeMarker}
+          remove={this.removeMarker}
         />
         <Map
           google={this.props.google}

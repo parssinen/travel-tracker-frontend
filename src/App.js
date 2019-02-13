@@ -215,7 +215,7 @@ const Map = ({ user, logout, settings }) => {
 }
 
 const MenuExampleButtons = ({ name, logout, settings }) => (
-  <Menu>
+  <Menu stackable widths={4} size='huge'>
     <Menu.Item>Welcome {name}!</Menu.Item>
     <Menu.Item>
       <Button onClick={settings}>Settings</Button>
