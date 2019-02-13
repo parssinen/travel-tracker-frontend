@@ -16,11 +16,11 @@ import {
   Grid,
   Form,
   Segment,
+  Menu,
   Icon,
   Button,
   Message
 } from 'semantic-ui-react'
-import dataService from './services/Data'
 import AddMenu from './components/AddMenu'
 import AddRouting from './components/AddRouting'
 import LoginForm from './LoginForm'
@@ -54,23 +54,6 @@ export class App extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
   componentDidMount = async () => {
-    /*const data = await blogService.getAll()
-    const blogs = data
-      .sort(compare)
-      .map(blog =>
-        <Blog
-          key={blog.id}
-          id={blog.id}
-          user={blog.user}
-          likes={blog.likes}
-          author={blog.author}
-          title={blog.title}
-          url={blog.url}
-        />
-      )
-
-    this.setState({ blogs })*/
-
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
@@ -217,8 +200,11 @@ const Map = ({ user, logout, settings }) => {
         width: '100%',
         marginLeft: 0
       }}>
-      {/*<Button onClick={logout}>Log out</Button>
-      <Button onClick={settings}>Settings</Button>*/}
+      <MenuExampleButtons
+        name={user.username}
+        logout={logout}
+        settings={settings}
+      />
       <GoogleApiWrapper
         user={user}
         apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
@@ -227,5 +213,17 @@ const Map = ({ user, logout, settings }) => {
     </div>
   )
 }
+
+const MenuExampleButtons = ({ name, logout, settings }) => (
+  <Menu>
+    <Menu.Item>Welcome {name}!</Menu.Item>
+    <Menu.Item>
+      <Button onClick={settings}>Settings</Button>
+    </Menu.Item>
+    <Menu.Item>
+      <Button onClick={logout}>Log out</Button>
+    </Menu.Item>
+  </Menu>
+)
 
 export default withRouter(App)

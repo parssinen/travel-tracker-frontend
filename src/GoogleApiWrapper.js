@@ -11,8 +11,8 @@ import {
   Button,
   Container
 } from 'semantic-ui-react'
-
-import MessageBlock from './MessageBlock'
+import travelService from './services/travels'
+import AddModal from './AddModal'
 
 const mapStyles = {
   width: '75%',
@@ -35,51 +35,90 @@ export class MapContainer extends Component {
       activeMarker: {}, //Shows the active marker upon click
       selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
       modalOpen: false,
-      markers: [
-        {
-          title: 'Tässä on nuppi',
-          name: 'The marker`s title will appear as a tooltip.',
-          position: { lat: 37.778519, lng: -122.40564 }
-        }
-      ]
+      newMarker: {},
+      markers: []
     }
   }
 
-  onMarkerClick = (props, marker, e) =>
+  componentDidMount = async () => {
+    const data = await travelService.getAll()
+    console.log('data', data)
+    const markers = data.map(marker => {
+      return {
+        id: marker.id,
+        title: marker.title,
+        text: marker.text,
+        position: { lat: marker.position.lat, lng: marker.position.lng }
+      }
+    })
+    this.setState({ markers })
+  }
+
+  onMarkerClick = async (props, marker, e) => {
+    const lat = props.position.lat
+    const lng = props.position.lng
+    const clickedMarker = this.state.markers.find(
+      marker => marker.position.lat === lat && marker.position.lng === lng
+    )
+    console.log('clicked', clickedMarker)
     this.setState({
       selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true,
+      activeMarker: clickedMarker,
       modalOpen: true
     })
+  }
 
   onClose = props => {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
-        activeMarker: null
+        modalOpen: false
       })
     }
+  }
+
+  createMarker = async () => {
+    const newMarker = this.state.newMarker
+    console.log('täs ny', newMarker)
+    try {
+      const travel = await travelService.create(newMarker)
+      await this.setState({
+        markers: this.state.markers.concat(travel)
+      })
+    } catch (exception) {
+      console.log(exception)
+    }
+    await this.setState({
+      activeMarker: newMarker,
+      modalOpen: true
+    })
   }
 
   onMapClicked = (t, map, coord) => {
     const { latLng } = coord
     const lat = latLng.lat()
     const lng = latLng.lng()
-    this.setState({
-      markers: this.state.markers.concat({
-        title: 'Tässä on nuppi!',
-        name: 'Tähän tulee vaikka minkälaista tekstiä',
-        position: { lat: lat, lng: lng }
-      })
-    })
+    const newMarker = {
+      title: 'add title...',
+      text: 'add text...',
+      position: {
+        lat,
+        lng
+      }
+    }
+    this.setState({ newMarker })
+    console.log('täs', newMarker)
+    this.createMarker()
   }
 
   renderMarkers = () => {
     const markers = this.state.markers
+    console.log('markers', markers)
     return markers.map(marker => (
       <Marker
-        name={marker.name}
+        key={marker.id}
+        title={marker.title}
+        name={marker.text}
         position={marker.position}
         onClick={this.onMarkerClick}
       />
@@ -91,6 +130,7 @@ export class MapContainer extends Component {
   handleClose = () => this.setState({ modalOpen: false })
 
   render() {
+    console.log('active', this.state.activeMarker)
     return (
       <div
         style={{
@@ -101,51 +141,17 @@ export class MapContainer extends Component {
           justifyContent: 'center',
           padding: 0
         }}>
-        <Modal
+        <AddModal
           open={this.state.modalOpen}
-          onClose={this.handleClose}
-          style={inlineStyle.modal}
-          closeIcon>
-          <Modal.Header>Select a Photo</Modal.Header>
-          <Modal.Content image>
-            <Image
-              wrapped
-              size='medium'
-              src='https://react.semantic-ui.com/images/avatar/large/rachel.png'
-            />
-            <Modal.Description>
-              <Header>Owner: {this.state.user.username}</Header>
-              <p>
-                We've found the following gravatar image associated with your
-                e-mail address.
-              </p>
-              <p>Is it okay to use this photo?</p>
-            </Modal.Description>
-          </Modal.Content>
-        </Modal>
-        {/*<MessageBlock name={this.state.user.username} />*/}
+          close={this.handleClose}
+          inlineStyle={inlineStyle}
+          marker={this.state.activeMarker}
+        />
         <Map
           google={this.props.google}
           zoom={2}
           initialCenter={{ lat: 0, lng: 0 }}
           onClick={this.onMapClicked}>
-          {/*<InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
-          size='big'>
-          <Item relaxed>
-            <div>{this.state.activeMarker === null ?
-              <h4>...</h4>
-              :
-              <div><h2>{this.state.activeMarker.title}</h2>
-                <h4>{this.state.activeMarker.name}</h4></div>
-            }<Button icon>
-                <Icon name='expand'
-                />
-              </Button></div>
-          </Item>
-          </InfoWindow>*/}
           {this.renderMarkers()}
         </Map>
       </div>
