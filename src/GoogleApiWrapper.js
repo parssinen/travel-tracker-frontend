@@ -45,6 +45,7 @@ export class MapContainer extends Component {
     console.log('data', data)
     const markers = data.map(marker => {
       return {
+        user: marker.user._id,
         id: marker.id,
         title: marker.title,
         text: marker.text,
@@ -116,7 +117,9 @@ export class MapContainer extends Component {
     const { latLng } = coord
     const lat = latLng.lat()
     const lng = latLng.lng()
+    console.log('id', this.state.user)
     const newMarker = {
+      user: this.state.user.id,
       title: 'moi',
       text: 'add text...',
       position: {
@@ -130,7 +133,9 @@ export class MapContainer extends Component {
   }
 
   renderMarkers = () => {
-    const markers = this.state.markers
+    const markers = this.state.markers.filter(
+      m => m.user === this.state.user.id
+    )
     console.log('markers', markers)
     return markers.map(marker => (
       <Marker
@@ -148,8 +153,8 @@ export class MapContainer extends Component {
   handleClose = () => this.setState({ modalOpen: false })
 
   render() {
-    console.log(this.state.markers)
-    console.log(this.state.activeMarker)
+    console.log('markerit', this.state.markers)
+    console.log('aktiivimarkkeri', this.state.activeMarker)
     return (
       <div
         style={{

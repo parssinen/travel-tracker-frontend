@@ -25,11 +25,11 @@ const AddMenu = ({ title, remove }) => {
         <Header>{title}</Header>
       </Menu.Item>
       <Menu.Item position='right'>
-        <Button icon onClick={console.log('pencil')}>
+        <Button icon onClick={() => console.log('pencil')}>
           <Icon name='pencil' />
         </Button>
       </Menu.Item>
-      <Menu.Item centered>
+      <Menu.Item>
         <Button icon onClick={remove}>
           <Icon name='trash' />
         </Button>

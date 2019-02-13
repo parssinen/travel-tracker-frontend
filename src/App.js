@@ -87,7 +87,7 @@ export class App extends Component {
         username: this.state.username,
         password: this.state.password
       })
-
+      console.log('KÄYTTÄJÄ', user)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
       this.setState({ username: '', password: '', user: user })
