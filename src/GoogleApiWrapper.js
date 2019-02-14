@@ -21,7 +21,7 @@ const mapStyles = {
 
 const inlineStyle = {
   modal: {
-    marginTop: '-200px',
+    marginTop: '-240px',
     display: 'fixed !important'
   }
 }
@@ -38,7 +38,8 @@ export class MapContainer extends Component {
       markers: [],
       newTitle: '',
       newText: '',
-      activeMenuItem: 'info'
+      activeMenuItem: 'info',
+      open: false
     }
   }
 
@@ -57,6 +58,9 @@ export class MapContainer extends Component {
     this.setState({ markers })
   }
 
+  open = () => this.setState({ open: true })
+  close = () => this.setState({ open: false })
+
   handleFieldChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
@@ -71,8 +75,6 @@ export class MapContainer extends Component {
       editedMarker.id,
       editedMarker
     )
-    console.log('lähti', editedMarker)
-    console.log('palautui', updatedMarker)
     const markers = this.state.markers.filter(m => m.id !== editedMarker.id)
     await this.setState({
       activeMarker: updatedMarker,
@@ -81,27 +83,24 @@ export class MapContainer extends Component {
       markers: markers.concat(updatedMarker),
       activeMenuItem: 'info'
     })
-    console.log('NewTitle on nyt', this.state.newTitle)
-    console.log('NewText on nyt', this.state.newText)
   }
 
   removeMarker = async () => {
     const toRemove = this.state.activeMarker
-    if (window.confirm(`Remove ${toRemove.title}?`)) {
-      try {
-        const travel = await travelService.remove(toRemove.id)
-        const markers = this.state.markers.filter(m => m.id !== toRemove.id)
-        await this.setState({ markers })
-      } catch (exception) {
-        console.log(exception)
-      }
-      await this.setState({
-        activeMarker: {},
-        newTitle: '',
-        newText: '',
-        modalOpen: false
-      })
+    try {
+      const travel = await travelService.remove(toRemove.id)
+      const markers = this.state.markers.filter(m => m.id !== toRemove.id)
+      await this.setState({ markers })
+    } catch (exception) {
+      console.log(exception)
     }
+    await this.setState({
+      activeMarker: {},
+      newTitle: '',
+      newText: '',
+      modalOpen: false,
+      open: false
+    })
   }
 
   onMarkerClick = async (props, marker, e) => {
@@ -120,10 +119,12 @@ export class MapContainer extends Component {
     })
   }
 
-  onClose = props => {
-    if (this.state.showingInfoWindow) {
+  handleModalClose = props => {
+    console.log(this.state.newText, '<-teksti titteli ->', this.state.newTitle)
+    if (this.state.newText.length === 0 && this.state.newTitle.length === 0) {
+      this.open()
+    } else {
       this.setState({
-        showingInfoWindow: false,
         activeMarker: {},
         newTitle: '',
         newText: '',
@@ -196,7 +197,7 @@ export class MapContainer extends Component {
         }}>
         <AddModal
           open={this.state.modalOpen}
-          close={this.handleClose}
+          close={this.handleModalClose}
           inlineStyle={inlineStyle}
           marker={this.state.activeMarker}
           newTitle={this.state.newTitle}
@@ -208,6 +209,9 @@ export class MapContainer extends Component {
           setInfo={this.setInfo}
           setEdit={this.setEdit}
           setSettings={this.setSettings}
+          confirmOpen={this.state.open}
+          openConfirm={this.open}
+          closeConfirm={this.close}
         />
         <Map
           google={this.props.google}

@@ -8,6 +8,7 @@ import {
   Grid,
   Message,
   Divider,
+  Confirm,
   Menu,
   Button,
   Icon
@@ -26,15 +27,29 @@ const AddModal = ({
   active,
   setInfo,
   setEdit,
-  setSettings
+  setSettings,
+  confirmOpen,
+  openConfirm,
+  closeConfirm
 }) => {
-  console.log('oisko', newText)
   return (
-    <Modal
-      open={open}
-      onClose={close}
-      style={inlineStyle.modal}
-      closeIcon>
+    <Modal open={open} onClose={close} style={inlineStyle.modal} closeIcon>
+      <div style={inlineStyle}>
+        <Confirm
+          centered
+          content={
+            newText.length === 0 && newTitle.length === 0
+              ? 'Do you want to remove the empty marker?'
+              : 'Are you sure?'
+          }
+          cancelButton='Never mind'
+          confirmButton="Let's do it"
+          verticalAllign='middle'
+          open={confirmOpen}
+          onCancel={closeConfirm}
+          onConfirm={onRemoveSubmit}
+        />
+      </div>
       <div>
         <Menu icon='labeled' fluid widths={3} tabular size='huge' color='blue'>
           <Menu.Item name='info' active={active === 'info'} onClick={setInfo}>
@@ -62,7 +77,7 @@ const AddModal = ({
               <Grid centered verticalAlign='middle'>
                 <Grid.Row>
                   <Header as='h1' textAlign='center'>
-                    {marker.title}
+                    {newTitle.length > 0 ? marker.title : ''}
                   </Header>
                 </Grid.Row>
                 <Grid.Row>
@@ -110,10 +125,11 @@ const AddModal = ({
             <Divider hidden />
             <Grid padded='very' centered verticalAlign='middle'>
               <Button
+                size='large'
                 centered
                 color='blue'
                 type='submit'
-                onClick={onRemoveSubmit}>
+                onClick={openConfirm}>
                 Remove marker
               </Button>
             </Grid>

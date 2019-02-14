@@ -21,8 +21,6 @@ import {
   Button,
   Message
 } from 'semantic-ui-react'
-import AddMenu from './components/AddMenu'
-import AddRouting from './components/AddRouting'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
@@ -195,11 +193,7 @@ export class App extends Component {
 
 const Map = ({ user, logout, settings }) => {
   return (
-    <div
-      style={{
-        width: '100%',
-        marginLeft: 0
-      }}>
+    <div>
       <MenuExampleButtons
         name={user.username}
         logout={logout}
