@@ -50,7 +50,6 @@ export class App extends Component {
   }
 
   handleFieldChange = event => {
-    console.log(event.target.value)
     this.setState({ [event.target.name]: event.target.value })
   }
 
@@ -166,7 +165,7 @@ export class App extends Component {
               ? () => <Redirect to='/map' />
               : () => (
                   <RegistrationForm
-                    onSubmit={this.register.bind(this)}
+                    onSubmit={this.register}
                     handleChange={this.handleFieldChange}
                     username={this.state.newUsername}
                     password={this.state.newPassword}

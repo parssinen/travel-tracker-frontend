@@ -35,8 +35,10 @@ export class MapContainer extends Component {
       activeMarker: {}, //Shows the active marker upon click
       selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
       modalOpen: false,
-      newMarker: {},
-      markers: []
+      markers: [],
+      newTitle: '',
+      newText: '',
+      activeMenuItem: 'info'
     }
   }
 
@@ -55,7 +57,33 @@ export class MapContainer extends Component {
     this.setState({ markers })
   }
 
-  updateMarker = async () => {}
+  handleFieldChange = event => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  updateMarker = async event => {
+    const editedMarker = {
+      ...this.state.activeMarker,
+      title: this.state.newTitle,
+      text: this.state.newText
+    }
+    const updatedMarker = await travelService.update(
+      editedMarker.id,
+      editedMarker
+    )
+    console.log('lähti', editedMarker)
+    console.log('palautui', updatedMarker)
+    const markers = this.state.markers.filter(m => m.id !== editedMarker.id)
+    await this.setState({
+      activeMarker: updatedMarker,
+      newTitle: updatedMarker.title,
+      newText: updatedMarker.text,
+      markers: markers.concat(updatedMarker),
+      activeMenuItem: 'info'
+    })
+    console.log('NewTitle on nyt', this.state.newTitle)
+    console.log('NewText on nyt', this.state.newText)
+  }
 
   removeMarker = async () => {
     const toRemove = this.state.activeMarker
@@ -69,6 +97,8 @@ export class MapContainer extends Component {
       }
       await this.setState({
         activeMarker: {},
+        newTitle: '',
+        newText: '',
         modalOpen: false
       })
     }
@@ -80,11 +110,13 @@ export class MapContainer extends Component {
     const clickedMarker = this.state.markers.find(
       marker => marker.position.lat === lat && marker.position.lng === lng
     )
-    console.log('clicked', clickedMarker)
-    await this.setState({
+    this.setState({
       selectedPlace: props,
       activeMarker: clickedMarker,
-      modalOpen: true
+      newTitle: clickedMarker.title,
+      newText: clickedMarker.text,
+      modalOpen: true,
+      activeMenuItem: 'info'
     })
   }
 
@@ -93,43 +125,40 @@ export class MapContainer extends Component {
       this.setState({
         showingInfoWindow: false,
         activeMarker: {},
+        newTitle: '',
+        newText: '',
         modalOpen: false
       })
     }
   }
 
-  createMarker = async () => {
-    const newMarker = this.state.newMarker
-    console.log('täs ny', newMarker)
-    try {
-      const travel = await travelService.create(newMarker)
-      await this.setState({
-        markers: this.state.markers.concat(travel),
-        activeMarker: travel,
-        modalOpen: true
-      })
-    } catch (exception) {
-      console.log(exception)
-    }
-  }
-
-  onMapClicked = (t, map, coord) => {
+  onMapClicked = async (t, map, coord) => {
     const { latLng } = coord
     const lat = latLng.lat()
     const lng = latLng.lng()
     console.log('id', this.state.user)
     const newMarker = {
       user: this.state.user.id,
-      title: 'moi',
-      text: 'add text...',
+      title: '',
+      text: '',
       position: {
         lat,
         lng
       }
     }
-    this.setState({ newMarker })
-    console.log('täs', newMarker)
-    this.createMarker()
+    try {
+      const travel = await travelService.create(newMarker)
+      await this.setState({
+        markers: this.state.markers.concat(travel),
+        activeMarker: travel,
+        newTitle: travel.title,
+        newText: travel.text,
+        modalOpen: true,
+        activeMenuItem: 'edit'
+      })
+    } catch (exception) {
+      console.log(exception)
+    }
   }
 
   renderMarkers = () => {
@@ -148,13 +177,13 @@ export class MapContainer extends Component {
     ))
   }
 
-  handleOpen = () => this.setState({ modalOpen: true })
-
   handleClose = () => this.setState({ modalOpen: false })
 
+  setInfo = () => this.setState({ activeMenuItem: 'info' })
+  setEdit = () => this.setState({ activeMenuItem: 'edit' })
+  setSettings = () => this.setState({ activeMenuItem: 'settings' })
+
   render() {
-    console.log('markerit', this.state.markers)
-    console.log('aktiivimarkkeri', this.state.activeMarker)
     return (
       <div
         style={{
@@ -170,7 +199,15 @@ export class MapContainer extends Component {
           close={this.handleClose}
           inlineStyle={inlineStyle}
           marker={this.state.activeMarker}
-          remove={this.removeMarker}
+          newTitle={this.state.newTitle}
+          newText={this.state.newText}
+          onRemoveSubmit={this.removeMarker}
+          onEditSubmit={this.updateMarker}
+          handleChange={this.handleFieldChange}
+          active={this.state.activeMenuItem}
+          setInfo={this.setInfo}
+          setEdit={this.setEdit}
+          setSettings={this.setSettings}
         />
         <Map
           google={this.props.google}
