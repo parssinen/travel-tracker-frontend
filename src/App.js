@@ -214,78 +214,9 @@ const Map = ({
   user,
   logout,
   settings,
-  settingsOpen,
-  settingsOnClose,
-  menu,
-  menuOff,
-  menuOn,
-  changePassword
 }) => {
   return (
     <div>
-      {/*
-      <Modal
-        open={settingsOpen}
-        onClose={settingsOnClose}
-        style={inlineStyle.modal}
-        closeIcon>
-        <div>
-          <Divider hidden />
-          <Divider hidden />
-          <Divider hidden />
-
-          {menu ? (
-            <div>
-              <Divider hidden />
-              <Grid padded='very' centered verticalAlign='middle'>
-                <Button
-                  size='large'
-                  centered
-                  color='blue'
-                  type='submit'
-                  onClick={menuOff}>
-                  Change password
-                </Button>
-              </Grid>
-              <Divider hidden />
-            </div>
-          ) : (
-            <div>
-              <Grid centered verticalAlign='middle'>
-                <Grid.Column style={{ maxWidth: 450 }}>
-                  <Form
-                    onSubmit={changePassword}
-                    size='large' /*loading success error field error
-                  >
-                    <Form.Input
-                      name='newTitle'
-                      //placeholder='Enter title'
-                      label='Edit title'
-                      value={1}
-                      onChange={menuOff}
-                    />
-                    <Form.TextArea
-                      name='newText'
-                      label='Additional information'
-                      value={1}
-                      //placeholder='Enter travel information'
-                      rows={5}
-                      onChange={menuOff}
-                    />
-                    <Button color='blue' fluid size='large' type='submit'>
-                      Update
-                    </Button>
-                  </Form>
-                </Grid.Column>
-              </Grid>
-            </div>
-          )}
-          <Divider hidden />
-          <Divider hidden />
-          <Divider hidden />
-        </div>
-          </Modal>*/}
-
       <GoogleApiWrapper
         user={user}
         apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
@@ -304,11 +235,6 @@ const MenuExampleButtons = ({ name, logout, settings }) => (
   <div>
     <Menu fluid widths={3} borderless size='huge'>
       <Menu.Item>
-        {/*<Button color='blue' onClick={settings} size='large'>
-          <Icon name='settings' />
-          Settings
-        </Button>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/}
         <Button color='blue' onClick={logout} size='large'>
           <Icon name='log out' />
           Log out

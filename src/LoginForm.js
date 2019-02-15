@@ -23,13 +23,6 @@ const LoginForm = ({
 }) => {
   return (
     <div className='login-form' style={{ overflow: 'hidden' }}>
-      {/*<style>{`
-      body > div,
-      body > div > div,
-      body > div > div > div.login-form {
-        height: 100%;
-      }
-    `}</style>*/}
       <Notification message={message} color={color} />
       <Divider hidden />
       <Divider hidden />

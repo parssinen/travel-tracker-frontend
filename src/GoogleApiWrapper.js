@@ -3,14 +3,9 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import travelService from './services/travels'
 import AddModal from './AddModal'
 
-const mapStyles = {
-  width: '75%',
-  height: '75%'
-}
-
 const inlineStyle = {
   modal: {
-    marginTop: '-240px',
+    marginTop: '-250px',
     display: 'fixed !important'
   }
 }
