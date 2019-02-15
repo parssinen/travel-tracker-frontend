@@ -16,16 +16,15 @@ const LoginForm = ({
   onSubmit,
   handleChange,
   username,
-  password,
-  message,
-  color
+  password
 }) => {
+  const message = true
   return (
     <div style={{ overflow: 'hidden' }}>
       <Divider hidden />
       <Grid centered padded>
         <Grid.Row>
-            <Notification message={message} color={color} />
+            <Notification />
         </Grid.Row>
       </Grid>
       <Divider hidden />
