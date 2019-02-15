@@ -22,9 +22,8 @@ export class App extends Component {
     menu: true
   }
 
-  handleFieldChange = event => {
+  handleFieldChange = event =>
     this.setState({ [event.target.name]: event.target.value })
-  }
 
   componentDidMount = async () => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
@@ -38,7 +37,6 @@ export class App extends Component {
   logout = () => {
     travelService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
-    this.notify(`${this.state.user.username} logged out succesfully!`, 'green')
     this.setState({ user: null })
   }
 
@@ -104,28 +102,18 @@ export class App extends Component {
     this.props.history.push('/login')
   }
 
-  settings = () => {
-    this.setState({ settingsOpen: true })
-  }
+  settings = () => this.setState({ settingsOpen: true })
 
-  settingsOnClose = () => {
-    this.setState({ settingsOpen: false })
-  }
+  settingsOnClose = () => this.setState({ settingsOpen: false })
 
-  menuOff = () => {
-    this.setState({ menu: false })
-  }
+  menuOff = () => this.setState({ menu: false })
 
-  menuOn = () => {
-    this.setState({ menu: true })
-  }
-
-  changePassword = () => {}
+  menuOn = () => this.setState({ menu: true })
 
   render() {
     const user = this.state.user !== null
     return (
-      <Container style={{ height: '100%' }}>
+      <Container>
         <Route
           exact
           path='/'
@@ -134,7 +122,6 @@ export class App extends Component {
           }
         />
         <Route
-          style={{ height: '100%' }}
           path='/login'
           render={
             user
@@ -152,7 +139,6 @@ export class App extends Component {
           }
         />
         <Route
-          style={{ height: '100%' }}
           path='/create'
           render={
             user
@@ -174,19 +160,7 @@ export class App extends Component {
           path='/map'
           render={
             user
-              ? () => (
-                  <Map
-                    user={this.state.user}
-                    logout={this.logout}
-                    settings={this.settings}
-                    settingsOpen={this.state.settingsOpen}
-                    settingsOnClose={this.settingsOnClose}
-                    menu={this.state.menu}
-                    menuOff={this.menuOff}
-                    menuOn={this.menuOn}
-                    changePassword={this.changePassword}
-                  />
-                )
+              ? () => <Map user={this.state.user} logout={this.logout} />
               : () => <Redirect to='/' />
           }
         />
@@ -195,24 +169,22 @@ export class App extends Component {
   }
 }
 
-const Map = ({ user, logout, settings }) => {
-  return (
-    <div>
-      <GoogleApiWrapper
-        user={user}
-        apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
-        language={'en'}
-      />
-      <MenuExampleButtons logout={logout} />
-    </div>
-  )
-}
+const Map = ({ user, logout }) => (
+  <div>
+    <GoogleApiWrapper
+      user={user}
+      apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
+      language={'en'}
+    />
+    <Logout logout={logout} />
+  </div>
+)
 
-const MenuExampleButtons = ({ logout }) => (
+const Logout = ({ logout }) => (
   <div>
     <Menu fluid widths={3} borderless size='huge'>
       <Menu.Item>
-        <Button color='blue' onClick={logout} size='large'>
+        <Button centered color='blue' onClick={logout} size='large'>
           <Icon name='log out' />
           Log out
         </Button>
