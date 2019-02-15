@@ -8,20 +8,16 @@ import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
 import loginService from './services/login'
 import userService from './services/users.js'
-//import Notification from './Notification'
 import { message } from './reducers/messageReducer'
-import { messageColor } from './reducers/messageColorReducer'
+import { loginUser, logoutUser } from './reducers/userReducer'
 
 export class Application extends Component {
   state = {
-    user: null,
     username: '',
     newUsername: '',
     newPassword: '',
     newPassword2: '',
     password: '',
-    //color: '',
-    //message: '',
     settingsOpen: false,
     menu: true
   }
@@ -33,21 +29,18 @@ export class Application extends Component {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
-      this.setState({ user })
+      this.props.loginUser(user)
       travelService.setToken(user.token)
-
-      //this.props.anecdoteInitialization()
     }
   }
 
   logout = () => {
     travelService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
-    this.setState({ user: null })
+    this.props.logoutUser()
   }
 
   notify = (message, color) => {
-    console.log('väri', color, 'viesti', message)
     this.props.message({
       color: color,
       message: message
@@ -63,8 +56,8 @@ export class Application extends Component {
       })
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
-      this.setState({ username: '', password: '', user: user })
-      this.notify(`${this.state.user.username} logged in succesfully!`, 'green')
+      this.setState({ username: '', password: '' })
+      this.props.loginUser(user)
     } catch (exception) {
       console.log(exception)
       this.notify('invalid username or password, try again!', 'red')
@@ -121,7 +114,7 @@ export class Application extends Component {
   menuOn = () => this.setState({ menu: true })
 
   render() {
-    const user = this.state.user
+    const user = this.props.user
     return (
       <Container>
         <Route
@@ -166,7 +159,7 @@ export class Application extends Component {
           path='/map'
           render={
             user
-              ? () => <Map user={this.state.user} logout={this.logout} />
+              ? () => <Map user={this.props.user} logout={this.logout} />
               : () => <Redirect to='/' />
           }
         />
@@ -199,12 +192,22 @@ const Logout = ({ logout }) => (
   </div>
 )
 
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = {
+  loginUser,
+  logoutUser,
+  message
+}
+
 const connectedApplication = withRouter(
   connect(
-    null,
-    {
-      message
-    }
+    mapStateToProps,
+    mapDispatchToProps
   )(Application)
 )
 
