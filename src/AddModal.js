@@ -34,7 +34,7 @@ const AddModal = ({
 }) => {
   return (
     <Modal open={open} onClose={close} style={inlineStyle.modal} closeIcon>
-      <div style={inlineStyle}>
+      <div>
         <Confirm
           centered
           content={
@@ -49,8 +49,6 @@ const AddModal = ({
           onCancel={closeConfirm}
           onConfirm={onRemoveSubmit}
         />
-      </div>
-      <div>
         <Menu icon='labeled' fluid widths={3} tabular size='huge' color='blue'>
           <Menu.Item name='info' active={active === 'info'} onClick={setInfo}>
             <Icon name='trophy' />
@@ -81,11 +79,7 @@ const AddModal = ({
                   </Header>
                 </Grid.Row>
                 <Grid.Row>
-                  {newText.length > 0 ? (
-                    <Segment>{marker.text}</Segment>
-                  ) : (
-                    <div />
-                  )}
+                  <Header as='h3'>{marker.text}</Header>
                 </Grid.Row>
               </Grid>
             </div>
@@ -110,7 +104,7 @@ const AddModal = ({
                     label='Additional information'
                     value={newText}
                     //placeholder='Enter travel information'
-                    rows={5}
+                    rows={4}
                     onChange={handleChange}
                   />
                   <Button color='blue' fluid size='large' type='submit'>

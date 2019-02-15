@@ -10,7 +10,7 @@ const Notification = ({ message, color }) => {
         <Divider hidden />
         <Message
           icon={icon}
-          size='big'
+          size='large'
           color={color}
           header={header}
           content={message}

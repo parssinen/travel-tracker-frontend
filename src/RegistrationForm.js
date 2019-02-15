@@ -6,26 +6,46 @@ import {
   Icon,
   Header,
   Message,
-  Segment
+  Segment,
+  Divider
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import Notification from './Notification'
 
 const RegistrationForm = ({
   onSubmit,
   handleChange,
   username,
   password,
-  password2
+  password2,
+  message,
+  color
 }) => {
   return (
-    <div className='login-form'>
-      <style>{`
+    <div className='login-form' style={{ overflow: 'hidden' }}>
+      {/*<style>{`
       body > div,
       body > div > div,
       body > div > div > div.login-form {
         height: 100%;
       }
-    `}</style>
+    `}</style>*/}
+      <Notification message={message} color={color} />
+      <Divider hidden />
+      <Divider hidden />
+      {message ? (
+        <div />
+      ) : (
+        <div>
+          <Divider hidden />
+          <Divider hidden />
+          <Divider hidden />
+          <Divider hidden />
+          <Divider hidden />
+          <Divider hidden />
+          <Divider hidden />
+        </div>
+      )}
       <Grid
         textAlign='center'
         style={{ height: '100%' }}
@@ -78,6 +98,7 @@ const RegistrationForm = ({
           </Message>
         </Grid.Column>
       </Grid>
+      <Divider hidden />
     </div>
   )
 }

@@ -1,16 +1,5 @@
 import React, { Component } from 'react'
-import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react'
-import {
-  Item,
-  Grid,
-  Link,
-  Icon,
-  Image,
-  Header,
-  Modal,
-  Button,
-  Container
-} from 'semantic-ui-react'
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import travelService from './services/travels'
 import AddModal from './AddModal'
 
@@ -179,7 +168,6 @@ export class MapContainer extends Component {
   }
 
   handleClose = () => this.setState({ modalOpen: false })
-
   setInfo = () => this.setState({ activeMenuItem: 'info' })
   setEdit = () => this.setState({ activeMenuItem: 'edit' })
   setSettings = () => this.setState({ activeMenuItem: 'settings' })
@@ -188,7 +176,7 @@ export class MapContainer extends Component {
     return (
       <div
         style={{
-          height: 350,
+          height: '100%',
           width: '100%',
           display: 'flex',
           flexFlow: 'row nowrap',
@@ -224,6 +212,8 @@ export class MapContainer extends Component {
     )
   }
 }
+
+const styles = {}
 
 export default GoogleApiWrapper(({ apiKey, language }) => ({
   apiKey: apiKey,
