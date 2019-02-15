@@ -23,13 +23,6 @@ const RegistrationForm = ({
 }) => {
   return (
     <div className='login-form' style={{ overflow: 'hidden' }}>
-      {/*<style>{`
-      body > div,
-      body > div > div,
-      body > div > div > div.login-form {
-        height: 100%;
-      }
-    `}</style>*/}
       <Notification message={message} color={color} />
       <Divider hidden />
       <Divider hidden />
@@ -54,10 +47,7 @@ const RegistrationForm = ({
           <Header as='h2' color='blue' textAlign='center'>
             <Icon name='user circle' /> Create new account
           </Header>
-          <Form
-            onSubmit={onSubmit}
-            size='large' /*loading success error field error*/
-          >
+          <Form onSubmit={onSubmit} size='large'>
             <Segment>
               <Form.Input
                 fluid

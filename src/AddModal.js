@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   Modal,
   Header,
-  Image,
-  Segment,
   Form,
   Grid,
-  Message,
   Divider,
   Confirm,
   Menu,
@@ -34,21 +31,21 @@ const AddModal = ({
 }) => {
   return (
     <div>
-        <Confirm
-          centered={false}
-          header='WARNING!'
-          textAlign='top'
-          content={
-            newText.length === 0 && newTitle.length === 0
-              ? 'Do you want to remove the empty marker?'
-              : 'Are you sure?'
-          }
-          cancelButton='Never mind'
-          confirmButton="Let's do it"
-          open={confirmOpen}
-          onCancel={closeConfirm}
-          onConfirm={onRemoveSubmit}
-        />
+      <Confirm
+        centered={false}
+        header='WARNING!'
+        textAlign='top'
+        content={
+          newText.length === 0 && newTitle.length === 0
+            ? 'Do you want to remove the empty marker?'
+            : 'Are you sure?'
+        }
+        cancelButton='Never mind'
+        confirmButton="Let's do it"
+        open={confirmOpen}
+        onCancel={closeConfirm}
+        onConfirm={onRemoveSubmit}
+      />
       <Modal
         padded
         open={open}
@@ -102,13 +99,9 @@ const AddModal = ({
             <div>
               <Grid centered verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
-                  <Form
-                    onSubmit={onEditSubmit}
-                    size='large' /*loading success error field error*/
-                  >
+                  <Form onSubmit={onEditSubmit} size='large'>
                     <Form.Input
                       name='newTitle'
-                      //placeholder='Enter title'
                       label='Edit title'
                       value={newTitle}
                       onChange={handleChange}
@@ -117,7 +110,6 @@ const AddModal = ({
                       name='newText'
                       label='Additional information'
                       value={newText}
-                      //placeholder='Enter travel information'
                       rows={4}
                       onChange={handleChange}
                     />

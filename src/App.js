@@ -1,24 +1,12 @@
 import React, { Component } from 'react'
 import GoogleApiWrapper from './GoogleApiWrapper'
-import {
-  BrowserRouter as Router,
-  withRouter,
-  Redirect,
-  Route
-} from 'react-router-dom'
+import { withRouter, Redirect, Route } from 'react-router-dom'
 import { Container, Menu, Icon, Button } from 'semantic-ui-react'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
 import loginService from './services/login'
 import userService from './services/users.js'
-
-const inlineStyle = {
-  modal: {
-    marginTop: '-250px',
-    display: 'fixed !important'
-  }
-}
 
 export class App extends Component {
   state = {
@@ -52,7 +40,6 @@ export class App extends Component {
     window.localStorage.removeItem('loggedInUser')
     this.notify(`${this.state.user.username} logged out succesfully!`, 'green')
     this.setState({ user: null })
-    console.log('hoidettu')
   }
 
   notify = (message, color) => {
@@ -72,7 +59,6 @@ export class App extends Component {
         username: this.state.username,
         password: this.state.password
       })
-      console.log('KÄYTTÄJÄ', user)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
       this.setState({ username: '', password: '', user: user })
@@ -101,7 +87,7 @@ export class App extends Component {
 
   createAccount = async () => {
     try {
-      const user = await userService.create({
+      await userService.create({
         username: this.state.newUsername,
         password: this.state.newPassword
       })
@@ -137,7 +123,6 @@ export class App extends Component {
   changePassword = () => {}
 
   render() {
-    console.log('THE USER IS', this.state.user)
     const user = this.state.user !== null
     return (
       <Container style={{ height: '100%' }}>
@@ -210,11 +195,7 @@ export class App extends Component {
   }
 }
 
-const Map = ({
-  user,
-  logout,
-  settings,
-}) => {
+const Map = ({ user, logout, settings }) => {
   return (
     <div>
       <GoogleApiWrapper
@@ -222,16 +203,12 @@ const Map = ({
         apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
         language={'en'}
       />
-      <MenuExampleButtons
-        name={user.username}
-        logout={logout}
-        settings={settings}
-      />
+      <MenuExampleButtons logout={logout} />
     </div>
   )
 }
 
-const MenuExampleButtons = ({ name, logout, settings }) => (
+const MenuExampleButtons = ({ logout }) => (
   <div>
     <Menu fluid widths={3} borderless size='huge'>
       <Menu.Item>

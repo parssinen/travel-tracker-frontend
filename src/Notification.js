@@ -1,5 +1,5 @@
 import React from 'react'
-import { Message, Container, Divider, Icon } from 'semantic-ui-react'
+import { Message, Divider } from 'semantic-ui-react'
 
 const Notification = ({ message, color }) => {
   const icon = color === 'red' ? 'warning sign' : 'thumbs up'

@@ -5,7 +5,6 @@ import {
   Grid,
   Icon,
   Header,
-  Image,
   Divider,
   Message,
   Segment
@@ -49,10 +48,7 @@ const LoginForm = ({
           <Header as='h2' color='blue' textAlign='center'>
             <Icon name='plane' /> Log in to account
           </Header>
-          <Form
-            onSubmit={onSubmit}
-            size='large' /*loading success error field error*/
-          >
+          <Form onSubmit={onSubmit} size='large'>
             <Segment>
               <Form.Input
                 fluid

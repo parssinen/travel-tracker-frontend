@@ -15,9 +15,7 @@ export class MapContainer extends Component {
     super(props)
     this.state = {
       user: this.props.user,
-      showingInfoWindow: false, //Hides or the shows the infoWindow
-      activeMarker: {}, //Shows the active marker upon click
-      selectedPlace: {}, //Shows the infoWindow to the selected place upon a marker
+      activeMarker: {},
       modalOpen: false,
       markers: [],
       newTitle: '',
@@ -29,7 +27,6 @@ export class MapContainer extends Component {
 
   componentDidMount = async () => {
     const data = await travelService.getAll()
-    console.log('data', data)
     const markers = data.map(marker => {
       return {
         user: marker.user._id,
@@ -72,7 +69,7 @@ export class MapContainer extends Component {
   removeMarker = async () => {
     const toRemove = this.state.activeMarker
     try {
-      const travel = await travelService.remove(toRemove.id)
+      await travelService.remove(toRemove.id)
       const markers = this.state.markers.filter(m => m.id !== toRemove.id)
       await this.setState({ markers })
     } catch (exception) {
@@ -104,7 +101,6 @@ export class MapContainer extends Component {
   }
 
   handleModalClose = props => {
-    console.log(this.state.newText, '<-teksti titteli ->', this.state.newTitle)
     if (this.state.newText.length === 0 && this.state.newTitle.length === 0) {
       this.open()
     } else {
@@ -121,7 +117,6 @@ export class MapContainer extends Component {
     const { latLng } = coord
     const lat = latLng.lat()
     const lng = latLng.lng()
-    console.log('id', this.state.user)
     const newMarker = {
       user: this.state.user.id,
       title: '',
@@ -150,7 +145,6 @@ export class MapContainer extends Component {
     const markers = this.state.markers.filter(
       m => m.user === this.state.user.id
     )
-    console.log('markers', markers)
     return markers.map(marker => (
       <Marker
         key={marker.id}
@@ -207,8 +201,6 @@ export class MapContainer extends Component {
     )
   }
 }
-
-const styles = {}
 
 export default GoogleApiWrapper(({ apiKey, language }) => ({
   apiKey: apiKey,
