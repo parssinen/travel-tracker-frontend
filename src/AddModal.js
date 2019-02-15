@@ -33,7 +33,7 @@ const AddModal = ({
     <Confirm
       centered={false}
       header='WARNING!'
-      textAlign='top'
+      textalign='middle'
       content={
         newText.length === 0 && newTitle.length === 0
           ? 'Do you want to remove the empty marker?'

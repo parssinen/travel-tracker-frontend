@@ -21,17 +21,19 @@ const LoginForm = ({
   color
 }) => {
   return (
-    <div className='login-form' style={{ overflow: 'hidden' }}>
-      <Notification message={message} color={color} />
+    <div style={{ overflow: 'hidden' }}>
       <Divider hidden />
+      <Grid centered padded>
+        <Grid.Row>
+            <Notification message={message} color={color} />
+        </Grid.Row>
+      </Grid>
       <Divider hidden />
 
       {message ? (
         <div />
       ) : (
         <div>
-          <Divider hidden />
-          <Divider hidden />
           <Divider hidden />
           <Divider hidden />
           <Divider hidden />

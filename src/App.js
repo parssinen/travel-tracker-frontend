@@ -7,6 +7,7 @@ import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
 import loginService from './services/login'
 import userService from './services/users.js'
+import Notification from './Notification'
 
 export class App extends Component {
   state = {
@@ -84,22 +85,28 @@ export class App extends Component {
   }
 
   createAccount = async () => {
-    try {
-      await userService.create({
-        username: this.state.newUsername,
-        password: this.state.newPassword
-      })
+    const users = await userService.getAll()
+    if (
+      users.filter(user => user.username === this.state.newUsername).length > 0
+    ) {
+      this.notify('Username is already taken!', 'red')
+    } else {
+      try {
+        await userService.create({
+          username: this.state.newUsername,
+          password: this.state.newPassword
+        })
+      } catch (exception) {
+        console.log(exception)
+      }
       this.notify(`account ${this.state.newUsername} created!`, 'green')
       this.setState({
         newUsername: '',
         newPassword: '',
         newPassword2: ''
       })
-    } catch (exception) {
-      console.log(exception)
-      this.notify('server error!', 'red')
+      this.props.history.push('/login')
     }
-    this.props.history.push('/login')
   }
 
   settings = () => this.setState({ settingsOpen: true })
@@ -111,7 +118,7 @@ export class App extends Component {
   menuOn = () => this.setState({ menu: true })
 
   render() {
-    const user = this.state.user !== null
+    const user = this.state.user
     return (
       <Container>
         <Route
