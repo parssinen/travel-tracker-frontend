@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import Notification from './Notification'
 
 const RegistrationForm = ({
+  message,
   onSubmit,
   updateUsername,
   updatePassword,
@@ -21,7 +22,6 @@ const RegistrationForm = ({
   password,
   password2
 }) => {
-  const message = true
   return (
     <div style={{ overflow: 'hidden' }}>
       <Divider hidden />
@@ -31,7 +31,7 @@ const RegistrationForm = ({
         </Grid.Row>
       </Grid>
       <Divider hidden />
-      {message ? (
+      {message.message ? (
         <div />
       ) : (
         <div>

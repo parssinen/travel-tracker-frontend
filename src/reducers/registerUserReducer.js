@@ -1,4 +1,7 @@
-const reducer = (store = {}, action) => {
+const reducer = (
+  store = { username: '', password: '', password2: '' },
+  action
+) => {
   switch (action.type) {
     case 'UPDATEREG':
       return action.userToLogin

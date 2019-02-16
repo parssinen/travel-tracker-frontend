@@ -13,13 +13,13 @@ import { Link } from 'react-router-dom'
 import Notification from './Notification'
 
 const LoginForm = ({
+  message,
   onSubmit,
   updateUsername,
   updatePassword,
   username,
   password
 }) => {
-  const message = true
   return (
     <div style={{ overflow: 'hidden' }}>
       <Divider hidden />
@@ -29,8 +29,7 @@ const LoginForm = ({
         </Grid.Row>
       </Grid>
       <Divider hidden />
-
-      {message ? (
+      {message.message ? (
         <div />
       ) : (
         <div>
@@ -41,7 +40,6 @@ const LoginForm = ({
           <Divider hidden />
         </div>
       )}
-
       <Grid
         textAlign='center'
         style={{ height: '100%' }}

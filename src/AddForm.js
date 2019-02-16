@@ -14,7 +14,6 @@ import Notification from './Notification'
 
 const AddForm = () => {
 
-  
-}
+}  
 
 export default AddForm

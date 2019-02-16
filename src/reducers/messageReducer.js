@@ -9,7 +9,7 @@ const reducer = (store = {}, action) => {
   }
 }
 
-export const message = message => {
+export const updateMessage = message => {
   return dispatch => {
     dispatch({
       type: 'NOTIFY',

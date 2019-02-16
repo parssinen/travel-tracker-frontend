@@ -8,7 +8,7 @@ import RegistrationForm from './RegistrationForm'
 import travelService from './services/travels'
 import loginService from './services/login'
 import userService from './services/users.js'
-import { message } from './reducers/messageReducer'
+import { updateMessage } from './reducers/messageReducer'
 import { loginUser, logoutUser } from './reducers/userReducer'
 import {
   updateUsername,
@@ -59,7 +59,7 @@ export class Application extends Component {
   }
 
   notify = (message, color) => {
-    this.props.message({
+    this.props.updateMessage({
       color: color,
       message: message
     })
@@ -120,25 +120,27 @@ export class Application extends Component {
       this.props.history.push('/login')
     }
   }
-  
+
   render() {
-    const user = this.props.user
     return (
       <Container>
         <Route
           exact
           path='/'
           render={
-            user ? () => <Redirect to='/map' /> : () => <Redirect to='/login' />
+            this.props.user
+              ? () => <Redirect to='/map' />
+              : () => <Redirect to='/login' />
           }
         />
         <Route
           path='/login'
           render={
-            user
+            this.props.user
               ? () => <Redirect to='/map' />
               : () => (
                   <LoginForm
+                    message={this.props.message}
                     onSubmit={this.login}
                     updateUsername={this.updateUsername}
                     updatePassword={this.updatePassword}
@@ -151,10 +153,11 @@ export class Application extends Component {
         <Route
           path='/create'
           render={
-            user
+            this.props.user
               ? () => <Redirect to='/map' />
               : () => (
                   <RegistrationForm
+                    message={this.props.message}
                     onSubmit={this.register}
                     updateUsername={this.updateRUsername}
                     updatePassword={this.updateRPassword}
@@ -169,7 +172,7 @@ export class Application extends Component {
         <Route
           path='/map'
           render={
-            user
+            this.props.user
               ? () => <Map user={this.props.user} logout={this.logout} />
               : () => <Redirect to='/' />
           }
@@ -207,7 +210,8 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     userToLogin: state.userToLogin,
-    userToRegister: state.userToRegister
+    userToRegister: state.userToRegister,
+    message: state.message
   }
 }
 
@@ -221,7 +225,7 @@ const mapDispatchToProps = {
   clearLogin,
   loginUser,
   logoutUser,
-  message
+  updateMessage
 }
 
 const connectedApplication = withRouter(

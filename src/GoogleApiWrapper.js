@@ -70,7 +70,7 @@ export class MapContainer extends Component {
     })
     this.props.changeTab('info')
     this.props.addActiveMarker(updatedMarker)
-    this.props.addMarker(updatedMarker)
+    this.props.initMarkers(this.props.markers.concat(updatedMarker))
   }
 
   removeMarker = async () => {
@@ -138,7 +138,7 @@ export class MapContainer extends Component {
       this.props.changeTab('edit')
       this.props.addActiveMarker(travel)
       this.props.openModal()
-      this.props.addMarker(travel)
+      this.props.initMarker(this.props.markers.concat(travel))
     } catch (exception) {
       console.log(exception)
     }
