@@ -14,7 +14,9 @@ import Notification from './Notification'
 
 const RegistrationForm = ({
   onSubmit,
-  handleChange,
+  updateUsername,
+  updatePassword,
+  updatePassword2,
   username,
   password,
   password2
@@ -57,7 +59,7 @@ const RegistrationForm = ({
                 iconPosition='left'
                 placeholder='Username'
                 value={username}
-                onChange={handleChange}
+                onChange={updateUsername}
               />
               <Form.Input
                 fluid
@@ -67,7 +69,7 @@ const RegistrationForm = ({
                 placeholder='Password'
                 type='password'
                 value={password}
-                onChange={handleChange}
+                onChange={updatePassword}
               />
               <Form.Input
                 fluid
@@ -77,7 +79,7 @@ const RegistrationForm = ({
                 placeholder='Repeat password'
                 type='password'
                 value={password2}
-                onChange={handleChange}
+                onChange={updatePassword2}
               />
               <Button color='blue' fluid size='large' type='submit'>
                 Submit

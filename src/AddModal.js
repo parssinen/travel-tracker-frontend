@@ -20,7 +20,8 @@ const AddModal = ({
   newText,
   onRemoveSubmit,
   onEditSubmit,
-  handleChange,
+  handleTitleChange,
+  handleTextChange,
   active,
   setInfo,
   setEdit,
@@ -46,7 +47,6 @@ const AddModal = ({
       onConfirm={onRemoveSubmit}
     />
     <Modal
-      padded
       open={open}
       onClose={close}
       style={inlineStyle.modal}
@@ -97,14 +97,14 @@ const AddModal = ({
                     name='newTitle'
                     label='Edit title'
                     value={newTitle}
-                    onChange={handleChange}
+                    onChange={handleTitleChange}
                   />
                   <Form.TextArea
                     name='newText'
                     label='Additional information'
                     value={newText}
                     rows={4}
-                    onChange={handleChange}
+                    onChange={handleTextChange}
                   />
                   <Button color='blue' fluid size='large' type='submit'>
                     Update
@@ -116,7 +116,7 @@ const AddModal = ({
         ) : (
           <div>
             <Divider hidden />
-            <Grid padded='very' centered verticalAlign='middle'>
+            <Grid padded centered verticalAlign='middle'>
               <Button
                 size='large'
                 centered='top'

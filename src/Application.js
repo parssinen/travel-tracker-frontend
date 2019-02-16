@@ -10,20 +10,38 @@ import loginService from './services/login'
 import userService from './services/users.js'
 import { message } from './reducers/messageReducer'
 import { loginUser, logoutUser } from './reducers/userReducer'
+import {
+  updateUsername,
+  updatePassword,
+  clearLogin
+} from './reducers/loginUserReducer'
+import {
+  updateRUsername,
+  updateRPassword,
+  updateRPassword2,
+  clearRegister
+} from './reducers/registerUserReducer'
 
 export class Application extends Component {
-  state = {
-    username: '',
-    newUsername: '',
-    newPassword: '',
-    newPassword2: '',
-    password: '',
-    settingsOpen: false,
-    menu: true
+  updateRUsername = event => {
+    this.props.updateRUsername(event.target.value)
   }
 
-  handleFieldChange = event =>
-    this.setState({ [event.target.name]: event.target.value })
+  updateRPassword = event => {
+    this.props.updateRPassword(event.target.value)
+  }
+
+  updateRPassword2 = event => {
+    this.props.updateRPassword2(event.target.value)
+  }
+
+  updateUsername = event => {
+    this.props.updateUsername(event.target.value)
+  }
+
+  updatePassword = event => {
+    this.props.updatePassword(event.target.value)
+  }
 
   componentDidMount = async () => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
@@ -50,28 +68,26 @@ export class Application extends Component {
   login = async event => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username: this.state.username,
-        password: this.state.password
-      })
+      const user = await loginService.login(this.props.userToLogin)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
-      this.setState({ username: '', password: '' })
+      this.props.clearLogin()
       this.props.loginUser(user)
     } catch (exception) {
       console.log(exception)
       this.notify('invalid username or password, try again!', 'red')
-      this.setState({ username: '', password: '' })
+      this.props.clearLogin()
     }
   }
 
   register = async event => {
     event.preventDefault()
-    const username = this.state.newUsername
-    const password = this.state.newPassword
+    const username = this.props.userToRegister.username
+    const password = this.props.userToRegister.password
+    const password2 = this.props.userToRegister.password2
     if (username.length < 3) {
       this.notify('Username must be at least 3 characters long', 'red')
-    } else if (password !== this.state.newPassword2) {
+    } else if (password !== password2) {
       this.notify("Passwords don't match!", 'red')
     } else if (password.length < 3) {
       this.notify('Password must be at least 3 characters long!', 'red')
@@ -83,36 +99,28 @@ export class Application extends Component {
   createAccount = async () => {
     const users = await userService.getAll()
     if (
-      users.filter(user => user.username === this.state.newUsername).length > 0
+      users.filter(user => user.username === this.props.userToRegister.username)
+        .length > 0
     ) {
       this.notify('Username is already taken!', 'red')
     } else {
       try {
         await userService.create({
-          username: this.state.newUsername,
-          password: this.state.newPassword
+          username: this.props.userToRegister.username,
+          password: this.props.userToRegister.password
         })
       } catch (exception) {
         console.log(exception)
       }
-      this.notify(`account ${this.state.newUsername} created!`, 'green')
-      this.setState({
-        newUsername: '',
-        newPassword: '',
-        newPassword2: ''
-      })
+      this.notify(
+        `account ${this.props.userToRegister.username} created!`,
+        'green'
+      )
+      this.props.clearRegister()
       this.props.history.push('/login')
     }
   }
-
-  settings = () => this.setState({ settingsOpen: true })
-
-  settingsOnClose = () => this.setState({ settingsOpen: false })
-
-  menuOff = () => this.setState({ menu: false })
-
-  menuOn = () => this.setState({ menu: true })
-
+  
   render() {
     const user = this.props.user
     return (
@@ -132,9 +140,10 @@ export class Application extends Component {
               : () => (
                   <LoginForm
                     onSubmit={this.login}
-                    handleChange={this.handleFieldChange}
-                    username={this.state.username}
-                    password={this.state.password}
+                    updateUsername={this.updateUsername}
+                    updatePassword={this.updatePassword}
+                    username={this.props.loginUser.username}
+                    password={this.props.loginUser.password}
                   />
                 )
           }
@@ -147,10 +156,12 @@ export class Application extends Component {
               : () => (
                   <RegistrationForm
                     onSubmit={this.register}
-                    handleChange={this.handleFieldChange}
-                    username={this.state.newUsername}
-                    password={this.state.newPassword}
-                    password2={this.state.newPassword2}
+                    updateUsername={this.updateRUsername}
+                    updatePassword={this.updateRPassword}
+                    updatePassword2={this.updateRPassword2}
+                    username={this.props.userToRegister.username}
+                    password={this.props.userToRegister.password}
+                    password2={this.props.userToRegister.password2}
                   />
                 )
           }
@@ -183,7 +194,7 @@ const Logout = ({ logout }) => (
   <div>
     <Menu fluid widths={3} borderless size='huge'>
       <Menu.Item>
-        <Button centered color='blue' onClick={logout} size='large'>
+        <Button color='blue' onClick={logout} size='large'>
           <Icon name='log out' />
           Log out
         </Button>
@@ -194,11 +205,20 @@ const Logout = ({ logout }) => (
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    userToLogin: state.userToLogin,
+    userToRegister: state.userToRegister
   }
 }
 
 const mapDispatchToProps = {
+  clearRegister,
+  updateRPassword,
+  updateRPassword2,
+  updateRUsername,
+  updateUsername,
+  updatePassword,
+  clearLogin,
   loginUser,
   logoutUser,
   message

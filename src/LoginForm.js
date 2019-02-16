@@ -14,7 +14,8 @@ import Notification from './Notification'
 
 const LoginForm = ({
   onSubmit,
-  handleChange,
+  updateUsername,
+  updatePassword,
   username,
   password
 }) => {
@@ -24,7 +25,7 @@ const LoginForm = ({
       <Divider hidden />
       <Grid centered padded>
         <Grid.Row>
-            <Notification />
+          <Notification />
         </Grid.Row>
       </Grid>
       <Divider hidden />
@@ -58,7 +59,7 @@ const LoginForm = ({
                 iconPosition='left'
                 placeholder='Username'
                 value={username}
-                onChange={handleChange}
+                onChange={updateUsername}
               />
               <Form.Input
                 fluid
@@ -68,7 +69,7 @@ const LoginForm = ({
                 placeholder='Password'
                 type='password'
                 value={password}
-                onChange={handleChange}
+                onChange={updatePassword}
               />
               <Button color='blue' fluid size='large' type='submit'>
                 Login

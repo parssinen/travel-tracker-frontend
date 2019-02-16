@@ -1,8 +1,8 @@
-const reducer = (store = '', action) => {
+const reducer = (store = {}, action) => {
   switch (action.type) {
-    case 'ADD':
+    case 'ADDUSER':
       return action.user
-    case 'REMOVE':
+    case 'REMOVEUSER':
       return null
     default:
       return store
@@ -11,14 +11,14 @@ const reducer = (store = '', action) => {
 
 export const loginUser = user => dispatch => {
   dispatch({
-    type: 'ADD',
+    type: 'ADDUSER',
     user
   })
 }
 
 export const logoutUser = () => dispatch => {
   dispatch({
-    type: 'REMOVE'
+    type: 'REMOVEUSER'
   })
 }
 

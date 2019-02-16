@@ -2,6 +2,21 @@ import React, { Component } from 'react'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import travelService from './services/travels'
 import AddModal from './AddModal'
+import { connect } from 'react-redux'
+import {
+  updateMarkerInfo,
+  clearMarkerInfo,
+  updateText,
+  updateTitle
+} from './reducers/markerInfoReducer'
+import { openModal, closeModal } from './reducers/modalReducer'
+import { changeTab } from './reducers/menuReducer'
+import { openConfirm, closeConfirm } from './reducers/confirmReducer'
+import {
+  addActiveMarker,
+  clearActiveMarker
+} from './reducers/activeMarkerReducer'
+import { initMarkers, addMarker } from './reducers/markersReducer'
 
 const inlineStyle = {
   modal: {
@@ -11,21 +26,8 @@ const inlineStyle = {
 }
 
 export class MapContainer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: this.props.user,
-      activeMarker: {},
-      modalOpen: false,
-      markers: [],
-      newTitle: '',
-      newText: '',
-      activeMenuItem: 'info',
-      open: false
-    }
-  }
-
   componentDidMount = async () => {
+    this.props.changeTab('info')
     const data = await travelService.getAll()
     const markers = data.map(marker => {
       return {
@@ -36,80 +38,81 @@ export class MapContainer extends Component {
         position: { lat: marker.position.lat, lng: marker.position.lng }
       }
     })
-    this.setState({ markers })
+    this.props.initMarkers(markers)
   }
 
-  open = () => this.setState({ open: true })
-  close = () => this.setState({ open: false })
+  open = () => this.props.openConfirm()
+  close = () => this.props.closeConfirm()
 
-  handleFieldChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
+  handleTitleChange = event => {
+    this.props.updateTitle(event.target.value)
+  }
+
+  handleTextChange = event => {
+    this.props.updateText(event.target.value)
   }
 
   updateMarker = async event => {
     const editedMarker = {
-      ...this.state.activeMarker,
-      title: this.state.newTitle,
-      text: this.state.newText
+      ...this.props.activeMarker,
+      title: this.props.markerInfo.title,
+      text: this.props.markerInfo.text
     }
     const updatedMarker = await travelService.update(
       editedMarker.id,
       editedMarker
     )
-    const markers = this.state.markers.filter(m => m.id !== editedMarker.id)
-    await this.setState({
-      activeMarker: updatedMarker,
-      newTitle: updatedMarker.title,
-      newText: updatedMarker.text,
-      markers: markers.concat(updatedMarker),
-      activeMenuItem: 'info'
+    const markers = this.props.markers.filter(m => m.id !== editedMarker.id)
+    this.props.initMarkers(markers)
+    this.props.updateMarkerInfo({
+      title: updatedMarker.title,
+      text: updatedMarker.text
     })
+    this.props.changeTab('info')
+    this.props.addActiveMarker(updatedMarker)
+    this.props.addMarker(updatedMarker)
   }
 
   removeMarker = async () => {
-    const toRemove = this.state.activeMarker
+    const toRemove = this.props.activeMarker
     try {
       await travelService.remove(toRemove.id)
-      const markers = this.state.markers.filter(m => m.id !== toRemove.id)
-      await this.setState({ markers })
+      const markers = this.props.markers.filter(m => m.id !== toRemove.id)
+      this.props.initMarkers(markers)
     } catch (exception) {
       console.log(exception)
     }
-    await this.setState({
-      activeMarker: {},
-      newTitle: '',
-      newText: '',
-      modalOpen: false,
-      open: false
-    })
+    this.props.clearMarkerInfo()
+    this.props.closeConfirm()
+    this.props.clearActiveMarker()
+    this.props.closeModal()
   }
 
   onMarkerClick = async (props, marker, e) => {
     const lat = props.position.lat
     const lng = props.position.lng
-    const clickedMarker = this.state.markers.find(
+    const clickedMarker = this.props.markers.find(
       marker => marker.position.lat === lat && marker.position.lng === lng
     )
-    this.setState({
-      selectedPlace: props,
-      activeMarker: clickedMarker,
-      newTitle: clickedMarker.title,
-      newText: clickedMarker.text,
-      modalOpen: true,
-      activeMenuItem: 'info'
+    this.props.updateMarkerInfo({
+      title: clickedMarker.title,
+      text: clickedMarker.text
     })
+    this.props.addActiveMarker(clickedMarker)
+    this.props.openModal()
+    this.props.changeTab('info')
   }
 
   handleModalClose = props => {
-    if (this.state.newText.length === 0 && this.state.newTitle.length === 0) {
+    if (
+      this.props.markerInfo.title.length === 0 &&
+      this.props.markerInfo.text.length === 0
+    ) {
       this.open()
     } else {
-      this.setState({
-        activeMarker: {},
-        newTitle: '',
-        newText: '',
-        modalOpen: false
-      })
+      this.props.clearMarkerInfo()
+      this.props.clearActiveMarker()
+      this.props.closeModal()
     }
   }
 
@@ -118,7 +121,7 @@ export class MapContainer extends Component {
     const lat = latLng.lat()
     const lng = latLng.lng()
     const newMarker = {
-      user: this.state.user.id,
+      user: this.props.user.id,
       title: '',
       text: '',
       position: {
@@ -128,24 +131,24 @@ export class MapContainer extends Component {
     }
     try {
       const travel = await travelService.create(newMarker)
-      await this.setState({
-        markers: this.state.markers.concat(travel),
-        activeMarker: travel,
-        newTitle: travel.title,
-        newText: travel.text,
-        modalOpen: true,
-        activeMenuItem: 'edit'
+      this.props.updateMarkerInfo({
+        title: travel.title,
+        text: travel.text
       })
+      this.props.changeTab('edit')
+      this.props.addActiveMarker(travel)
+      this.props.openModal()
+      this.props.addMarker(travel)
     } catch (exception) {
       console.log(exception)
     }
   }
 
   renderMarkers = () => {
-    const markers = this.state.markers.filter(
-      m => m.user === this.state.user.id
-    )
-    return markers.map(marker => (
+    console.log(this.props.markers)
+    const markers = this.props.markers
+    const filtered = markers.filter(m => m.user === this.props.user.id)
+    return filtered.map(marker => (
       <Marker
         key={marker.id}
         title={marker.title}
@@ -156,10 +159,10 @@ export class MapContainer extends Component {
     ))
   }
 
-  handleClose = () => this.setState({ modalOpen: false })
-  setInfo = () => this.setState({ activeMenuItem: 'info' })
-  setEdit = () => this.setState({ activeMenuItem: 'edit' })
-  setSettings = () => this.setState({ activeMenuItem: 'settings' })
+  handleClose = () => this.props.closeModal()
+  setInfo = () => this.props.changeTab('menu')
+  setEdit = () => this.props.changeTab('edit')
+  setSettings = () => this.props.changeTab('settings')
 
   render() {
     return (
@@ -173,20 +176,21 @@ export class MapContainer extends Component {
           padding: 0
         }}>
         <AddModal
-          open={this.state.modalOpen}
+          open={this.props.modal}
           close={this.handleModalClose}
           inlineStyle={inlineStyle}
-          marker={this.state.activeMarker}
-          newTitle={this.state.newTitle}
-          newText={this.state.newText}
+          marker={this.props.activeMarker}
+          newTitle={this.props.markerInfo.title}
+          newText={this.props.markerInfo.text}
           onRemoveSubmit={this.removeMarker}
           onEditSubmit={this.updateMarker}
-          handleChange={this.handleFieldChange}
-          active={this.state.activeMenuItem}
+          handleTitleChange={this.handleTitleChange}
+          handleTextChange={this.handleTextChange}
+          active={this.props.menu}
           setInfo={this.setInfo}
           setEdit={this.setEdit}
           setSettings={this.setSettings}
-          confirmOpen={this.state.open}
+          confirmOpen={this.props.confirm}
           openConfirm={this.open}
           closeConfirm={this.close}
         />
@@ -202,7 +206,42 @@ export class MapContainer extends Component {
   }
 }
 
-export default GoogleApiWrapper(({ apiKey, language }) => ({
+const wrapper = GoogleApiWrapper(({ apiKey, language }) => ({
   apiKey: apiKey,
   language: language
 }))(MapContainer)
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    markerInfo: state.markerInfo,
+    modal: state.modal,
+    confirm: state.confirm,
+    menu: state.menu,
+    activeMarker: state.activeMarker,
+    markers: state.markers
+  }
+}
+
+const mapDispatchToProps = {
+  updateText,
+  updateTitle,
+  clearMarkerInfo,
+  updateMarkerInfo,
+  openModal,
+  closeModal,
+  openConfirm,
+  closeConfirm,
+  changeTab,
+  addActiveMarker,
+  clearActiveMarker,
+  initMarkers,
+  addMarker
+}
+
+const connectedWrapper = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(wrapper)
+
+export default connectedWrapper
