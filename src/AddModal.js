@@ -36,7 +36,7 @@ const AddModal = ({
       header='WARNING!'
       textalign='middle'
       content={
-        newText.length === 0 && newTitle.length === 0
+        marker.text.length === 0 && marker.title.length === 0
           ? 'Do you want to remove the empty marker?'
           : 'Are you sure?'
       }

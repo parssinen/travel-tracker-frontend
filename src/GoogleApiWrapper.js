@@ -105,8 +105,8 @@ export class MapContainer extends Component {
 
   handleModalClose = props => {
     if (
-      this.props.markerInfo.title.length === 0 &&
-      this.props.markerInfo.text.length === 0
+      this.props.activeMarker.title.length === 0 &&
+      this.props.activeMarker.text.length === 0
     ) {
       this.open()
     } else {
