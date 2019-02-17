@@ -1,9 +1,9 @@
-const reducer = (store = {}, action) => {
+const reducer = (store = { title: '', text: '' }, action) => {
   switch (action.type) {
     case 'ADDMARKER':
       return action.marker
     case 'REMOVEMARKER':
-      return null
+      return { title: '', text: '' }
     default:
       return store
   }

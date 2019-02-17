@@ -1,4 +1,4 @@
-const reducer = (store = {}, action) => {
+const reducer = (store = null, action) => {
   switch (action.type) {
     case 'ADDUSER':
       return action.user
