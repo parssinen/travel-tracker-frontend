@@ -1,24 +1,24 @@
 const reducer = (store = null, action) => {
   switch (action.type) {
-    case 'ADDUSER':
+    case 'ADD_USER':
       return action.user
-    case 'REMOVEUSER':
+    case 'REMOVE_USER':
       return null
     default:
       return store
   }
 }
 
-export const loginUser = user => dispatch => {
+export const login = user => dispatch => {
   dispatch({
-    type: 'ADDUSER',
+    type: 'ADD_USER',
     user
   })
 }
 
-export const logoutUser = () => dispatch => {
+export const logout = () => dispatch => {
   dispatch({
-    type: 'REMOVEUSER'
+    type: 'REMOVE_USER'
   })
 }
 

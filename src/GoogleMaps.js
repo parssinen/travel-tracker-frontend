@@ -76,7 +76,7 @@ export class GoogleMaps extends Component {
     this.props.closeModal()
   }
 
-  onMarkerClick = async (props, marker, e) => {
+  onMarkerClick = async props => {
     const lat = props.position.lat
     const lng = props.position.lng
     const clickedMarker = this.props.markers.find(

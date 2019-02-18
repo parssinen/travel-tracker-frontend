@@ -1,23 +1,23 @@
 const reducer = (store = {}, action) => {
   switch (action.type) {
-    case 'NOTIFY':
+    case 'ADD_MESSAGE':
       return action.message
-    case 'CLEAR':
+    case 'REMOVE_MESSAGE':
       return {}
     default:
       return store
   }
 }
 
-export const updateMessage = message => {
+export const showMessage = message => {
   return dispatch => {
     dispatch({
-      type: 'NOTIFY',
+      type: 'ADD_MESSAGE',
       message
     })
     setTimeout(() => {
       dispatch({
-        type: 'CLEAR'
+        type: 'REMOVE_MESSAGE'
       })
     }, 2000)
   }

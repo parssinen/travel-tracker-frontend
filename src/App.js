@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
 import travelService from './services/travels'
-import { loginUser, logoutUser } from './reducers/userReducer'
+import { login, logout } from './reducers/userReducer'
+import { clearForm } from './reducers/registerFormReducer'
 import Forms from './Forms'
 import Map from './Map'
 
@@ -12,7 +13,7 @@ export class App extends Component {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
-      this.props.loginUser(user)
+      this.props.login(user)
       travelService.setToken(user.token)
     }
   }
@@ -20,7 +21,8 @@ export class App extends Component {
   logout = () => {
     travelService.setToken(null)
     window.localStorage.removeItem('loggedInUser')
-    this.props.logoutUser()
+    this.props.clearForm()
+    this.props.logout()
   }
 
   render() {
@@ -70,8 +72,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  loginUser,
-  logoutUser
+  login,
+  logout,
+  clearForm
 }
 
 const connectedApp = connect(

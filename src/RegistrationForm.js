@@ -3,62 +3,57 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import userService from './services/users.js'
+import { showMessage } from './reducers/messageReducer'
 import {
-  updateRUsername,
-  updateRPassword,
-  updateRPassword2,
-  clearRegister
-} from './reducers/registerUserReducer'
-import { updateMessage } from './reducers/messageReducer'
+  updateUsername,
+  updatePassword,
+  updatePassword2,
+  clearForm
+} from './reducers/registerFormReducer'
 
 class RegistrationForm extends React.Component {
-  updateUsername = e => this.props.updateRUsername(e.target.value)
-
-  updatePassword = e => this.props.updateRPassword(e.target.value)
-
-  updatePassword2 = e => this.props.updateRPassword2(e.target.value)
-
-  notify = (message, color) => {
-    this.props.updateMessage({
-      text: message,
-      color: color
-    })
-  }
-
   register = async event => {
     event.preventDefault()
     const username = this.props.username
     const password = this.props.password
     const password2 = this.props.password2
-    const users = await userService.getAll()
     if (username.length < 3) {
-      this.notify('Username must be at least 3 characters long', 'red')
+      this.showMessage('Username must be at least 3 characters long!', 'red')
     } else if (password !== password2) {
-      this.notify("Passwords don't match!", 'red')
+      this.showMessage("Passwords don't match!", 'red')
     } else if (password.length < 3) {
-      this.notify('Password must be at least 3 characters long!', 'red')
-    } else if (
-      users.filter(u => u.username === username).length > 0
-    ) {
-      this.notify('Username is already taken!', 'red')
+      this.showMessage('Password must be at least 3 characters long!', 'red')
     } else {
-      this.createAccount()
+      this.createAccount(username, password)
     }
   }
 
-  createAccount = async () => {
-      try {
-        await userService.create({
-          username: this.props.username,
-          password: this.props.password
-        })
-      } catch (exception) {
-        console.log(exception)
-      }
-      this.notify(`account ${this.props.username} created!`, 'green')
-      this.props.clearRegister()
+  createAccount = async (username, password) => {
+    try {
+      await userService.create({
+        username,
+        password
+      })
+      this.showMessage(`Account ${username} created!`, 'green')
+      this.props.clearForm()
       this.props.history.push('/login')
+    } catch (exception) {
+      console.log(exception)
+      this.showMessage('Username is already taken!', 'red')
     }
+  }
+
+  showMessage = (text, color) =>
+    this.props.showMessage({
+      text,
+      color
+    })
+
+  updateUsername = e => this.props.updateUsername(e.target.value)
+
+  updatePassword = e => this.props.updatePassword(e.target.value)
+
+  updatePassword2 = e => this.props.updatePassword2(e.target.value)
 
   render() {
     return (
@@ -98,18 +93,18 @@ class RegistrationForm extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    username: state.userToRegister.username,
-    password: state.userToRegister.password,
-    password2: state.userToRegister.password2
+    username: state.registerForm.username,
+    password: state.registerForm.password,
+    password2: state.registerForm.password2
   }
 }
 
 const mapDispatchToProps = {
-  clearRegister,
-  updateRPassword,
-  updateRPassword2,
-  updateRUsername,
-  updateMessage
+  showMessage,
+  updateUsername,
+  updatePassword,
+  updatePassword2,
+  clearForm
 }
 
 const connectedRegistrationForm = withRouter(

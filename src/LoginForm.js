@@ -3,41 +3,38 @@ import { connect } from 'react-redux'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import loginService from './services/login'
 import travelService from './services/travels'
-import { loginUser, logoutUser } from './reducers/userReducer'
+import { login } from './reducers/userReducer'
+import { showMessage } from './reducers/messageReducer'
 import {
   updateUsername,
   updatePassword,
-  clearLogin
-} from './reducers/loginUserReducer'
-import { updateMessage } from './reducers/messageReducer'
-import { clearRegister } from './reducers/registerUserReducer'
+  clearForm
+} from './reducers/loginFormReducer'
 
 class LoginForm extends Component {
   login = async event => {
     event.preventDefault()
     try {
-      const user = await loginService.login(this.props.userToLogin)
+      const user = await loginService.login(this.props.user)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
-      this.props.clearLogin()
-      this.props.clearRegister()
-      this.props.loginUser(user)
+      this.props.clearForm()
+      this.props.login(user)
     } catch (exception) {
       console.log(exception)
-      this.props.updateMessage({
-        text: 'invalid username or password, try again!',
-        color: 'red'
-      })
+      this.showMessage('Invalid username or password!', 'red')
     }
   }
 
-  updateUsername = event => {
-    this.props.updateUsername(event.target.value)
-  }
+  showMessage = (text, color) =>
+    this.props.showMessage({
+      text,
+      color
+    })
 
-  updatePassword = event => {
-    this.props.updatePassword(event.target.value)
-  }
+  updateUsername = event => this.props.updateUsername(event.target.value)
+
+  updatePassword = event => this.props.updatePassword(event.target.value)
 
   render() {
     return (
@@ -47,7 +44,7 @@ class LoginForm extends Component {
             icon='user'
             iconPosition='left'
             placeholder='Username'
-            value={this.props.userToLogin.username}
+            value={this.props.username}
             onChange={this.updateUsername}
           />
           <Form.Input
@@ -55,7 +52,7 @@ class LoginForm extends Component {
             iconPosition='left'
             placeholder='Password'
             type='password'
-            value={this.props.userToLogin.password}
+            value={this.props.password}
             onChange={this.updatePassword}
           />
           <Button color='blue' fluid size='large' type='submit'>
@@ -68,19 +65,18 @@ class LoginForm extends Component {
 }
 const mapStateToProps = state => {
   return {
-    userToLogin: state.userToLogin,
-    userToRegister: state.userToRegister
+    user: state.loginForm,
+    username: state.loginForm.username,
+    password: state.loginForm.password
   }
 }
 
 const mapDispatchToProps = {
+  login,
+  showMessage,
   updateUsername,
   updatePassword,
-  clearLogin,
-  loginUser,
-  logoutUser,
-  updateMessage,
-  clearRegister
+  clearForm
 }
 
 const connectedLoginForm = connect(
