@@ -36,11 +36,11 @@ const AddModal = ({
       textalign='middle'
       content={
         marker.text.length === 0 && marker.title.length === 0
-          ? 'Do you want to remove the empty marker?'
+          ? 'Remove empty marker?'
           : 'Are you sure?'
       }
-      cancelButton='Never mind'
-      confirmButton="Let's do it"
+      cancelButton='Nevermind.'
+      confirmButton="Let's do it!"
       open={confirmOpen}
       onCancel={closeConfirm}
       onConfirm={onRemoveSubmit}
