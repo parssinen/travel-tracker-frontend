@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
 import travelService from './services/travels'
-import { loginUser } from './reducers/userReducer'
-import AddForm from './AddForm'
+import { loginUser, logoutUser } from './reducers/userReducer'
+import Forms from './Forms'
 import Map from './Map'
 
 export class App extends Component {
@@ -15,6 +15,12 @@ export class App extends Component {
       this.props.loginUser(user)
       travelService.setToken(user.token)
     }
+  }
+
+  logout = () => {
+    travelService.setToken(null)
+    window.localStorage.removeItem('loggedInUser')
+    this.props.logoutUser()
   }
 
   render() {
@@ -30,7 +36,7 @@ export class App extends Component {
             render={
               user
                 ? () => <Redirect to='/map' />
-                : () => <AddForm login={true} text={text} color={color} />
+                : () => <Forms login={true} text={text} color={color} />
             }
           />
           <Route
@@ -38,12 +44,16 @@ export class App extends Component {
             render={
               user
                 ? () => <Redirect to='/map' />
-                : () => <AddForm login={false} text={text} color={color} />
+                : () => <Forms login={false} text={text} color={color} />
             }
           />
           <Route
             path='/map'
-            render={user ? () => <Map /> : () => <Redirect to='/login' />}
+            render={
+              user
+                ? () => <Map logout={this.logout} />
+                : () => <Redirect to='/login' />
+            }
           />
         </Container>
       </Router>
@@ -60,7 +70,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  loginUser
+  loginUser,
+  logoutUser
 }
 
 const connectedApp = connect(

@@ -18,16 +18,8 @@ import {
 } from './reducers/activeMarkerReducer'
 import { initMarkers, addMarker } from './reducers/markersReducer'
 
-const inlineStyle = {
-  modal: {
-    marginTop: '-250px',
-    display: 'fixed !important'
-  }
-}
-
-export class MapContainer extends Component {
+export class GoogleMaps extends Component {
   componentDidMount = async () => {
-    this.props.changeTab('info')
     const data = await travelService.getAll()
     const markers = data.map(marker => {
       return {
@@ -44,15 +36,11 @@ export class MapContainer extends Component {
   open = () => this.props.openConfirm()
   close = () => this.props.closeConfirm()
 
-  handleTitleChange = event => {
-    this.props.updateTitle(event.target.value)
-  }
+  handleTitleChange = event => this.props.updateTitle(event.target.value)
 
-  handleTextChange = event => {
-    this.props.updateText(event.target.value)
-  }
+  handleTextChange = event => this.props.updateText(event.target.value)
 
-  updateMarker = async event => {
+  updateMarker = async () => {
     const editedMarker = {
       ...this.props.activeMarker,
       title: this.props.markerInfo.title,
@@ -103,7 +91,7 @@ export class MapContainer extends Component {
     this.props.changeTab('info')
   }
 
-  handleModalClose = props => {
+  handleModalClose = () => {
     if (
       this.props.activeMarker.title.length === 0 &&
       this.props.activeMarker.text.length === 0
@@ -145,7 +133,6 @@ export class MapContainer extends Component {
   }
 
   renderMarkers = () => {
-    console.log(this.props.markers)
     const markers = this.props.markers
     const filtered = markers.filter(m => m.user === this.props.user.id)
     return filtered.map(marker => (
@@ -160,25 +147,21 @@ export class MapContainer extends Component {
   }
 
   handleClose = () => this.props.closeModal()
-  setInfo = () => this.props.changeTab('menu')
+  setInfo = () => this.props.changeTab('info')
   setEdit = () => this.props.changeTab('edit')
   setSettings = () => this.props.changeTab('settings')
 
   render() {
+    console.log(this.props.menu)
     return (
       <div
         style={{
-          height: '100%',
-          width: '100%',
           display: 'flex',
-          flexFlow: 'row nowrap',
-          justifyContent: 'center',
-          padding: 0
+          justifyContent: 'center'
         }}>
         <AddModal
           open={this.props.modal}
           close={this.handleModalClose}
-          inlineStyle={inlineStyle}
           marker={this.props.activeMarker}
           newTitle={this.props.markerInfo.title}
           newText={this.props.markerInfo.text}
@@ -209,7 +192,7 @@ export class MapContainer extends Component {
 const wrapper = GoogleApiWrapper(({ apiKey, language }) => ({
   apiKey: apiKey,
   language: language
-}))(MapContainer)
+}))(GoogleMaps)
 
 const mapStateToProps = state => {
   return {

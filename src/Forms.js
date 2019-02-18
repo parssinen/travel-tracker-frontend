@@ -5,7 +5,7 @@ import Notification from './Notification'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 
-const AddForm = ({ login, text, color }) => (
+const Forms = ({ login, text, color }) => (
   <div style={{ overflow: 'hidden' }}>
     <Divider hidden />
     <Grid centered padded>
@@ -41,4 +41,4 @@ const AddForm = ({ login, text, color }) => (
   </div>
 )
 
-export default AddForm
+export default Forms

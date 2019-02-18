@@ -1,4 +1,4 @@
-const reducer = (store = {}, action) => {
+const reducer = (store = { username: '', password: '' }, action) => {
   switch (action.type) {
     case 'CLEARLOGIN':
       return {

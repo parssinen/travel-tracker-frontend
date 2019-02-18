@@ -14,7 +14,6 @@ import {
 const AddModal = ({
   open,
   close,
-  inlineStyle,
   marker,
   newTitle,
   newText,
@@ -49,7 +48,7 @@ const AddModal = ({
     <Modal
       open={open}
       onClose={close}
-      style={inlineStyle.modal}
+      style={{ marginTop: '-250px' }}
       closeIcon>
       <div>
         <Menu icon='labeled' fluid widths={3} tabular size='huge' color='blue'>

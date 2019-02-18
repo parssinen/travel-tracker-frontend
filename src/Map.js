@@ -1,14 +1,11 @@
 import React from 'react'
+import GoogleMaps from './GoogleMaps'
 import Logout from './Logout'
-import GoogleApiWrapper from './GoogleApiWrapper'
 
-const Map = () => (
+const Map = ({ logout }) => (
   <div>
-    <GoogleApiWrapper
-      apiKey='AIzaSyCy6G0q6EnGtGPGAAvLlC37STQU4Med0xE'
-      language={'en'}
-    />
-    <Logout />
+    <GoogleMaps apiKey={process.env.REACT_APP_MAPS_API_KEY} language={'en'} />
+    <Logout logout={logout} />
   </div>
 )
 

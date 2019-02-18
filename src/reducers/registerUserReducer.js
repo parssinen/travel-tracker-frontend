@@ -4,7 +4,7 @@ const reducer = (
 ) => {
   switch (action.type) {
     case 'UPDATEREG':
-      return action.userToLogin
+      return action.userToRegister
     case 'USERNAMEREG':
       return {
         username: action.username,
@@ -52,7 +52,7 @@ export const updateRPassword2 = password2 => dispatch => {
 export const clearRegister = () => dispatch => {
   dispatch({
     type: 'UPDATEREG',
-    userToLogin: {
+    userToRegister: {
       username: '',
       password: '',
       password2: ''
