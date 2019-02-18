@@ -1,30 +1,38 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import markerService from './services/markers'
-import AddModal from './AddModal'
+import InfoWindow from './InfoWindow'
 import { connect } from 'react-redux'
 import {
-  updateMarkerInfo,
-  clearMarkerInfo,
+  updateTitle,
   updateText,
-  updateTitle
-} from './reducers/markerInfoReducer'
-import { openModal, closeModal } from './reducers/modalReducer'
-import { changeTab } from './reducers/menuReducer'
-import { openConfirm, closeConfirm } from './reducers/confirmReducer'
+  updateForm,
+  clearForm
+} from './reducers/markerFormReducer'
+import { openWindow, closeWindow } from './reducers/infoWindowReducer'
+import {
+  openConfirmation,
+  closeConfirmation
+} from './reducers/confirmationReducer'
+import { changeTab } from './reducers/menuTabReducer'
 import {
   addActiveMarker,
-  clearActiveMarker
+  removeActiveMarker
 } from './reducers/activeMarkerReducer'
-import { initMarkers, addMarker } from './reducers/markersReducer'
+import {
+  initMarkers,
+  addMarker,
+  replaceMarker,
+  removeMarker
+} from './reducers/markerReducer'
 
 export class GoogleMaps extends Component {
   componentDidMount = async () => {
     const data = await markerService.getAll()
     const markers = data.map(marker => {
       return {
-        user: marker.user._id,
         id: marker.id,
+        user: marker.user._id,
         title: marker.title,
         text: marker.text,
         position: { lat: marker.position.lat, lng: marker.position.lng }
@@ -33,8 +41,8 @@ export class GoogleMaps extends Component {
     this.props.initMarkers(markers)
   }
 
-  open = () => this.props.openConfirm()
-  close = () => this.props.closeConfirm()
+  open = () => this.props.openConfirmation()
+  close = () => this.props.closeConfirmation()
 
   handleTitleChange = event => this.props.updateTitle(event.target.value)
 
@@ -43,37 +51,34 @@ export class GoogleMaps extends Component {
   updateMarker = async () => {
     const editedMarker = {
       ...this.props.activeMarker,
-      title: this.props.markerInfo.title,
-      text: this.props.markerInfo.text
+      title: this.props.markerForm.title,
+      text: this.props.markerForm.text
     }
     const updatedMarker = await markerService.update(
       editedMarker.id,
       editedMarker
     )
-    const markers = this.props.markers.filter(m => m.id !== editedMarker.id)
-    this.props.initMarkers(markers)
-    this.props.updateMarkerInfo({
+    this.props.replaceMarker(editedMarker.id, updatedMarker)
+    this.props.updateForm({
       title: updatedMarker.title,
       text: updatedMarker.text
     })
     this.props.changeTab('info')
     this.props.addActiveMarker(updatedMarker)
-    this.props.initMarkers(this.props.markers.concat(updatedMarker))
   }
 
   removeMarker = async () => {
     const toRemove = this.props.activeMarker
     try {
       await markerService.remove(toRemove.id)
-      const markers = this.props.markers.filter(m => m.id !== toRemove.id)
-      this.props.initMarkers(markers)
+      this.props.removeMarker(toRemove.id)
     } catch (exception) {
       console.log(exception)
     }
-    this.props.clearMarkerInfo()
-    this.props.closeConfirm()
-    this.props.clearActiveMarker()
-    this.props.closeModal()
+    this.props.clearForm()
+    this.props.closeConfirmation()
+    this.props.removeActiveMarker()
+    this.props.closeWindow()
   }
 
   onMarkerClick = async props => {
@@ -82,12 +87,12 @@ export class GoogleMaps extends Component {
     const clickedMarker = this.props.markers.find(
       marker => marker.position.lat === lat && marker.position.lng === lng
     )
-    this.props.updateMarkerInfo({
+    this.props.updateForm({
       title: clickedMarker.title,
       text: clickedMarker.text
     })
     this.props.addActiveMarker(clickedMarker)
-    this.props.openModal()
+    this.props.openWindow()
     this.props.changeTab('info')
   }
 
@@ -98,9 +103,9 @@ export class GoogleMaps extends Component {
     ) {
       this.open()
     } else {
-      this.props.clearMarkerInfo()
-      this.props.clearActiveMarker()
-      this.props.closeModal()
+      this.props.clearForm()
+      this.props.removeActiveMarker()
+      this.props.closeWindow()
     }
   }
 
@@ -119,14 +124,14 @@ export class GoogleMaps extends Component {
     }
     try {
       const marker = await markerService.create(newMarker)
-      this.props.updateMarkerInfo({
+      this.props.updateForm({
         title: marker.title,
         text: marker.text
       })
       this.props.changeTab('edit')
       this.props.addActiveMarker(marker)
-      this.props.openModal()
-      this.props.initMarker(this.props.markers.concat(marker))
+      this.props.openWindow()
+      this.props.addMarker(marker)
     } catch (exception) {
       console.log(exception)
     }
@@ -146,36 +151,35 @@ export class GoogleMaps extends Component {
     ))
   }
 
-  handleClose = () => this.props.closeModal()
+  handleClose = () => this.props.closeWindow()
   setInfo = () => this.props.changeTab('info')
   setEdit = () => this.props.changeTab('edit')
   setSettings = () => this.props.changeTab('settings')
 
   render() {
-    console.log(this.props.menu)
+    console.log(this.props.menuTab)
     return (
       <div
         style={{
           display: 'flex',
           justifyContent: 'center'
         }}>
-        <AddModal
-          open={this.props.modal}
-          close={this.handleModalClose}
-          marker={this.props.activeMarker}
-          newTitle={this.props.markerInfo.title}
-          newText={this.props.markerInfo.text}
-          onRemoveSubmit={this.removeMarker}
-          onEditSubmit={this.updateMarker}
-          handleTitleChange={this.handleTitleChange}
-          handleTextChange={this.handleTextChange}
-          active={this.props.menu}
-          setInfo={this.setInfo}
-          setEdit={this.setEdit}
-          setSettings={this.setSettings}
-          confirmOpen={this.props.confirm}
-          openConfirm={this.open}
-          closeConfirm={this.close}
+        <InfoWindow
+          infoWindow={this.props.infoWindow}
+          onClose={this.handleModalClose}
+          activeMarker={this.props.activeMarker}
+          form={this.props.markerForm}
+          updateMarker={this.updateMarker}
+          removeMarker={this.removeMarker}
+          onTitleChange={this.handleTitleChange}
+          onTextChange={this.handleTextChange}
+          menuTab={this.props.menuTab}
+          toInfo={this.setInfo}
+          toEdit={this.setEdit}
+          toRemove={this.setSettings}
+          confirmation={this.props.confirmation}
+          openConfirmation={this.open}
+          closeConfirmation={this.close}
         />
         <Map
           google={this.props.google}
@@ -197,29 +201,31 @@ const wrapper = GoogleApiWrapper(({ apiKey, language }) => ({
 const mapStateToProps = state => {
   return {
     user: state.user,
-    markerInfo: state.markerInfo,
-    modal: state.modal,
-    confirm: state.confirm,
-    menu: state.menu,
+    infoWindow: state.infoWindow,
+    confirmation: state.confirmation,
+    menuTab: state.menuTab,
+    markerForm: state.markerForm,
     activeMarker: state.activeMarker,
     markers: state.markers
   }
 }
 
 const mapDispatchToProps = {
-  updateText,
+  openWindow,
+  closeWindow,
+  openConfirmation,
+  closeConfirmation,
   updateTitle,
-  clearMarkerInfo,
-  updateMarkerInfo,
-  openModal,
-  closeModal,
-  openConfirm,
-  closeConfirm,
+  updateText,
+  updateForm,
+  clearForm,
   changeTab,
-  addActiveMarker,
-  clearActiveMarker,
   initMarkers,
-  addMarker
+  addMarker,
+  replaceMarker,
+  removeMarker,
+  addActiveMarker,
+  removeActiveMarker
 }
 
 const connectedWrapper = connect(

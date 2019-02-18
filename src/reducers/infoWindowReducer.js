@@ -1,23 +1,23 @@
 const reducer = (store = false, action) => {
   switch (action.type) {
-    case 'OPENMODAL':
+    case 'OPEN_WINDOW':
       return true
-    case 'CLOSEMODAL':
+    case 'CLOSE_WINDOW':
       return false
     default:
       return store
   }
 }
 
-export const openModal = () => dispatch => {
+export const openWindow = () => dispatch => {
   dispatch({
-    type: 'OPENMODAL'
+    type: 'OPEN_WINDOW'
   })
 }
 
-export const closeModal = () => dispatch => {
+export const closeWindow = () => dispatch => {
   dispatch({
-    type: 'CLOSEMODAL'
+    type: 'CLOSE_WINDOW'
   })
 }
 

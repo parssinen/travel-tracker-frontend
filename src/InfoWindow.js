@@ -11,23 +11,22 @@ import {
   Icon
 } from 'semantic-ui-react'
 
-const AddModal = ({
-  open,
-  close,
-  marker,
-  newTitle,
-  newText,
-  onRemoveSubmit,
-  onEditSubmit,
-  handleTitleChange,
-  handleTextChange,
-  active,
-  setInfo,
-  setEdit,
-  setSettings,
-  confirmOpen,
-  openConfirm,
-  closeConfirm
+const InfoWindow = ({
+  infoWindow,
+  onClose,
+  activeMarker,
+  form,
+  updateMarker,
+  removeMarker,
+  onTitleChange,
+  onTextChange,
+  menuTab,
+  toInfo,
+  toEdit,
+  toRemove,
+  confirmation,
+  openConfirmation,
+  closeConfirmation
 }) => (
   <div>
     <Confirm
@@ -35,35 +34,35 @@ const AddModal = ({
       header='WARNING!'
       textalign='middle'
       content={
-        marker.text.length === 0 && marker.title.length === 0
+        activeMarker.text.length === 0 && activeMarker.title.length === 0
           ? 'Remove empty marker?'
           : 'Are you sure?'
       }
       cancelButton='Nevermind.'
       confirmButton="Let's do it!"
-      open={confirmOpen}
-      onCancel={closeConfirm}
-      onConfirm={onRemoveSubmit}
+      open={confirmation}
+      onCancel={closeConfirmation}
+      onConfirm={removeMarker}
     />
     <Modal
-      open={open}
-      onClose={close}
+      open={infoWindow}
+      onClose={onClose}
       style={{ marginTop: '-250px' }}
       closeIcon>
       <div>
         <Menu icon='labeled' fluid widths={3} tabular size='huge' color='blue'>
-          <Menu.Item name='info' active={active === 'info'} onClick={setInfo}>
+          <Menu.Item name='info' active={menuTab === 'info'} onClick={toInfo}>
             <Icon name='book' />
             Info
           </Menu.Item>
-          <Menu.Item name='edit' active={active === 'edit'} onClick={setEdit}>
+          <Menu.Item name='edit' active={menuTab === 'edit'} onClick={toEdit}>
             <Icon name='edit' />
             Edit
           </Menu.Item>
           <Menu.Item
             name='settings'
-            active={active === 'settings'}
-            onClick={setSettings}>
+            active={menuTab === 'settings'}
+            onClick={toRemove}>
             <Icon name='trash' />
             Remove
           </Menu.Item>
@@ -71,39 +70,39 @@ const AddModal = ({
         <Divider hidden />
         <Divider hidden />
         <Divider hidden />
-        {active === 'info' ? (
+        {menuTab === 'info' ? (
           <div>
             <div>
               <Grid centered verticalAlign='middle'>
                 <Grid.Row>
                   <Header as='h1' textAlign='center'>
                     <Divider hidden />
-                    {newTitle.length > 0 ? marker.title : ''}
+                    {form.title.length > 0 ? activeMarker.title : ''}
                   </Header>
                 </Grid.Row>
                 <Grid.Row>
-                  <Header as='h3'>{marker.text}</Header>
+                  <Header as='h3'>{activeMarker.text}</Header>
                 </Grid.Row>
               </Grid>
             </div>
           </div>
-        ) : active === 'edit' ? (
+        ) : menuTab === 'edit' ? (
           <div>
             <Grid centered verticalAlign='middle'>
               <Grid.Column style={{ maxWidth: 450 }}>
-                <Form onSubmit={onEditSubmit} size='large'>
+                <Form onSubmit={updateMarker} size='large'>
                   <Form.Input
                     name='newTitle'
                     label='Edit title'
-                    value={newTitle}
-                    onChange={handleTitleChange}
+                    value={form.title}
+                    onChange={onTitleChange}
                   />
                   <Form.TextArea
                     name='newText'
                     label='Additional information'
-                    value={newText}
+                    value={form.text}
                     rows={4}
-                    onChange={handleTextChange}
+                    onChange={onTextChange}
                   />
                   <Button color='blue' fluid size='large' type='submit'>
                     Update
@@ -121,7 +120,7 @@ const AddModal = ({
                 centered='top'
                 color='blue'
                 type='submit'
-                onClick={openConfirm}>
+                onClick={openConfirmation}>
                 Remove marker
               </Button>
             </Grid>
@@ -136,4 +135,4 @@ const AddModal = ({
   </div>
 )
 
-export default AddModal
+export default InfoWindow

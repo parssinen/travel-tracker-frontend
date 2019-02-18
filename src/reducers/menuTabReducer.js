@@ -1,6 +1,6 @@
 const reducer = (store = '', action) => {
   switch (action.type) {
-    case 'CHANGETAB':
+    case 'CHANGE_TAB':
       return action.tab
     default:
       return store
@@ -9,8 +9,8 @@ const reducer = (store = '', action) => {
 
 export const changeTab = tab => dispatch => {
   dispatch({
-    type: 'CHANGETAB',
-    tab: tab
+    type: 'CHANGE_TAB',
+    tab
   })
 }
 

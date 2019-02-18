@@ -1,8 +1,8 @@
 const reducer = (store = { title: '', text: '' }, action) => {
   switch (action.type) {
-    case 'ADDMARKER':
+    case 'ADD_ACTIVE_MARKER':
       return action.marker
-    case 'REMOVEMARKER':
+    case 'REMOVE_ACTIVE_MARKER':
       return { title: '', text: '' }
     default:
       return store
@@ -11,14 +11,14 @@ const reducer = (store = { title: '', text: '' }, action) => {
 
 export const addActiveMarker = marker => dispatch => {
   dispatch({
-    type: 'ADDMARKER',
+    type: 'ADD_ACTIVE_MARKER',
     marker
   })
 }
 
-export const clearActiveMarker = () => dispatch => {
+export const removeActiveMarker = () => dispatch => {
   dispatch({
-    type: 'REMOVEMARKER'
+    type: 'REMOVE_ACTIVE_MARKER'
   })
 }
 
