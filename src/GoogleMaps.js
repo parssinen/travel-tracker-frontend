@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
-import travelService from './services/travels'
+import markerService from './services/markers'
 import AddModal from './AddModal'
 import { connect } from 'react-redux'
 import {
@@ -20,7 +20,7 @@ import { initMarkers, addMarker } from './reducers/markersReducer'
 
 export class GoogleMaps extends Component {
   componentDidMount = async () => {
-    const data = await travelService.getAll()
+    const data = await markerService.getAll()
     const markers = data.map(marker => {
       return {
         user: marker.user._id,
@@ -46,7 +46,7 @@ export class GoogleMaps extends Component {
       title: this.props.markerInfo.title,
       text: this.props.markerInfo.text
     }
-    const updatedMarker = await travelService.update(
+    const updatedMarker = await markerService.update(
       editedMarker.id,
       editedMarker
     )
@@ -64,7 +64,7 @@ export class GoogleMaps extends Component {
   removeMarker = async () => {
     const toRemove = this.props.activeMarker
     try {
-      await travelService.remove(toRemove.id)
+      await markerService.remove(toRemove.id)
       const markers = this.props.markers.filter(m => m.id !== toRemove.id)
       this.props.initMarkers(markers)
     } catch (exception) {
@@ -118,15 +118,15 @@ export class GoogleMaps extends Component {
       }
     }
     try {
-      const travel = await travelService.create(newMarker)
+      const marker = await markerService.create(newMarker)
       this.props.updateMarkerInfo({
-        title: travel.title,
-        text: travel.text
+        title: marker.title,
+        text: marker.text
       })
       this.props.changeTab('edit')
-      this.props.addActiveMarker(travel)
+      this.props.addActiveMarker(marker)
       this.props.openModal()
-      this.props.initMarker(this.props.markers.concat(travel))
+      this.props.initMarker(this.props.markers.concat(marker))
     } catch (exception) {
       console.log(exception)
     }

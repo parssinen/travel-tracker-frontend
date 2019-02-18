@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import loginService from './services/login'
-import travelService from './services/travels'
+import travelService from './services/markers'
 import { login } from './reducers/userReducer'
 import { showMessage } from './reducers/messageReducer'
 import {

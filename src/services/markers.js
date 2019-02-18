@@ -1,14 +1,14 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/travels'
+const baseUrl = 'http://localhost:3001/api/markers'
 let token = null
+
+const setToken = newToken => {
+  token = `bearer ${newToken}`
+}
 
 const getAll = async () => {
   const response = await axios.get(baseUrl)
   return response.data
-}
-
-const setToken = newToken => {
-  token = `bearer ${newToken}`
 }
 
 const create = async newObject => {
