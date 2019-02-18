@@ -154,7 +154,7 @@ export class GoogleMaps extends Component {
   handleClose = () => this.props.closeWindow()
   setInfo = () => this.props.changeTab('info')
   setEdit = () => this.props.changeTab('edit')
-  setSettings = () => this.props.changeTab('settings')
+  setSettings = () => this.props.changeTab('remove')
 
   render() {
     console.log(this.props.menuTab)

@@ -51,17 +51,16 @@ const InfoWindow = ({
       closeIcon>
       <div>
         <Menu icon='labeled' fluid widths={3} tabular size='huge' color='blue'>
-          <Menu.Item name='info' active={menuTab === 'info'} onClick={toInfo}>
+          <Menu.Item active={menuTab === 'info'} onClick={toInfo}>
             <Icon name='book' />
             Info
           </Menu.Item>
-          <Menu.Item name='edit' active={menuTab === 'edit'} onClick={toEdit}>
+          <Menu.Item active={menuTab === 'edit'} onClick={toEdit}>
             <Icon name='edit' />
             Edit
           </Menu.Item>
           <Menu.Item
-            name='settings'
-            active={menuTab === 'settings'}
+            active={menuTab === 'remove'}
             onClick={toRemove}>
             <Icon name='trash' />
             Remove
