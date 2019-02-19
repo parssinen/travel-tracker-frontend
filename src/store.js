@@ -8,8 +8,8 @@ import infoWindowReducer from './reducers/infoWindowReducer'
 import menuTabReducer from './reducers/menuTabReducer'
 import confirmationReducer from './reducers/confirmationReducer'
 import markerFormReducer from './reducers/markerFormReducer'
-import markerReducer from './reducers/markerReducer'
 import activeMarkerReducer from './reducers/activeMarkerReducer'
+import markerReducer from './reducers/markerReducer'
 
 const reducer = combineReducers({
   user: userReducer,
@@ -20,8 +20,8 @@ const reducer = combineReducers({
   menuTab: menuTabReducer,
   confirmation: confirmationReducer,
   markerForm: markerFormReducer,
-  markers: markerReducer,
-  activeMarker: activeMarkerReducer
+  activeMarker: activeMarkerReducer,
+  markers: markerReducer
 })
 
 const store = createStore(reducer, applyMiddleware(thunk))

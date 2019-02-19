@@ -4,7 +4,7 @@ const reducer = (store = { title: '', text: '' }, action) => {
       return { ...store, title: action.title }
     case 'MARKER_TEXT':
       return { ...store, text: action.text }
-    case 'MARKER_TEXT':
+    case 'MARKER_FORM':
       return action.form
     case 'MARKER_CLEAR':
       return { title: '', text: '' }
