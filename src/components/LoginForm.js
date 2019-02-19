@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Form, Segment } from 'semantic-ui-react'
-import loginService from './services/login'
-import travelService from './services/markers'
-import { login } from './reducers/userReducer'
-import { showMessage } from './reducers/messageReducer'
+import loginService from '../services/login'
+import travelService from '../services/markers'
+import { login } from '../reducers/userReducer'
+import { showMessage } from '../reducers/messageReducer'
 import {
   updateUsername,
   updatePassword,
   clearForm
-} from './reducers/loginFormReducer'
+} from '../reducers/loginFormReducer'
 
 class LoginForm extends Component {
   login = async event => {

@@ -11,24 +11,24 @@ import {
   Menu,
   Modal
 } from 'semantic-ui-react'
-import markerService from './services/markers'
-import { closeWindow } from './reducers/infoWindowReducer'
-import { changeTab } from './reducers/menuTabReducer'
+import markerService from '../services/markers'
+import { closeWindow } from '../reducers/infoWindowReducer'
+import { changeTab } from '../reducers/menuTabReducer'
 import {
   openConfirmation,
   closeConfirmation
-} from './reducers/confirmationReducer'
+} from '../reducers/confirmationReducer'
 import {
   updateTitle,
   updateText,
   updateForm,
   clearForm
-} from './reducers/markerFormReducer'
+} from '../reducers/markerFormReducer'
 import {
   addActiveMarker,
   removeActiveMarker
-} from './reducers/activeMarkerReducer'
-import { replaceMarker, removeMarker } from './reducers/markerReducer'
+} from '../reducers/activeMarkerReducer'
+import { replaceMarker, removeMarker } from '../reducers/markerReducer'
 
 class InfoWindow extends Component {
   updateMarker = async () => {
@@ -98,6 +98,8 @@ class InfoWindow extends Component {
         <Modal
           open={this.props.infoWindow}
           onClose={this.onClose}
+          scrolling
+          size='small'
           style={{ marginTop: '-250px' }}
           closeIcon>
           <div>

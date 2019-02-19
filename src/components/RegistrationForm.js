@@ -2,14 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Button, Form, Segment } from 'semantic-ui-react'
-import userService from './services/users.js'
-import { showMessage } from './reducers/messageReducer'
+import userService from '../services/users.js'
+import { showMessage } from '../reducers/messageReducer'
 import {
   updateUsername,
   updatePassword,
   updatePassword2,
   clearForm
-} from './reducers/registerFormReducer'
+} from '../reducers/registerFormReducer'
 
 class RegistrationForm extends React.Component {
   register = async event => {

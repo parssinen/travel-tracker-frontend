@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
-import markerService from './services/markers'
+import markerService from '../services/markers'
 import InfoWindow from './InfoWindow'
-import { openWindow } from './reducers/infoWindowReducer'
-import { changeTab } from './reducers/menuTabReducer'
-import { updateForm } from './reducers/markerFormReducer'
-import { addActiveMarker } from './reducers/activeMarkerReducer'
-import { initMarkers, addMarker } from './reducers/markerReducer'
+import { openWindow } from '../reducers/infoWindowReducer'
+import { changeTab } from '../reducers/menuTabReducer'
+import { updateForm } from '../reducers/markerFormReducer'
+import { addActiveMarker } from '../reducers/activeMarkerReducer'
+import { initMarkers, addMarker } from '../reducers/markerReducer'
 
 export class GoogleMaps extends Component {
   componentDidMount = async () => {

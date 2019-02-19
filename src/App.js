@@ -5,8 +5,8 @@ import { Container } from 'semantic-ui-react'
 import travelService from './services/markers'
 import { login, logout } from './reducers/userReducer'
 import { clearForm } from './reducers/registerFormReducer'
-import Forms from './Forms'
-import Map from './Map'
+import Forms from './components/Forms'
+import Map from './components/Map'
 
 export class App extends Component {
   componentDidMount = async () => {
