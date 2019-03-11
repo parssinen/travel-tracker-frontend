@@ -1,2 +1,2 @@
 # Travel Tracker front-end
-[My Travel Tracker application front-end built using React, Redux and Semantic.ui.](https://travel-tracking.herokuapp.com)
+[My Travel Tracker application](https://travel-tracking.herokuapp.com)
