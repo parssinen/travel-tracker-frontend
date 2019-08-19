@@ -91,8 +91,8 @@ export class GoogleMaps extends Component {
         <InfoWindow />
         <Map
           google={this.props.google}
-          zoom={2}
-          initialCenter={{ lat: 0, lng: 0 }}
+          zoom={11}
+          initialCenter={{ lat: 61.5238614, lng: 28.1689751 }}
           onClick={this.onMapClick}>
           {this.renderMarkers()}
         </Map>

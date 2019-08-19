@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Grid, Icon, Header, Divider, Message } from 'semantic-ui-react'
 import Notification from './Notification'
+import MapLogin from './MapLogin'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 
@@ -23,18 +24,12 @@ const Forms = ({ login, text, color }) => (
         <Divider hidden />
       </div>
     )}
-    <Grid textAlign='center'>
+    <Grid textAlign="center">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='blue'>
-          <Icon name={login ? 'plane' : 'user circle'} />
-          {login ? 'Log in to account' : 'Create new account'}
+        <Header as="h2" color="blue">
+          Sisään
         </Header>
-        {login ? <LoginForm /> : <RegistrationForm />}
-        <Message>
-          <Link to={login ? '/register' : '/login'}>
-            {login ? 'Create new account' : 'Log in to account'}
-          </Link>
-        </Message>
+        <MapLogin />
       </Grid.Column>
     </Grid>
     <Divider hidden />
