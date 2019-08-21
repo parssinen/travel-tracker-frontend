@@ -32,29 +32,29 @@ export class App extends Component {
     return (
       <Router>
         <Container>
-          <Route exact path='/' render={() => <Redirect to='/login' />} />
+          <Route exact path="/" render={() => <Redirect to="/login" />} />
           <Route
-            path='/login'
+            path="/login"
             render={
               user
-                ? () => <Redirect to='/map' />
+                ? () => <Redirect to="/map" />
                 : () => <Forms login={true} text={text} color={color} />
             }
           />
           <Route
-            path='/register'
+            path="/register"
             render={
               user
-                ? () => <Redirect to='/map' />
+                ? () => <Redirect to="/map" />
                 : () => <Forms login={false} text={text} color={color} />
             }
           />
           <Route
-            path='/map'
+            path="/map"
             render={
               user
                 ? () => <Map logout={this.logout} />
-                : () => <Redirect to='/login' />
+                : () => <Redirect to="/login" />
             }
           />
         </Container>
@@ -67,7 +67,9 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     text: state.message.text,
-    color: state.message.color
+    color: state.message.color,
+    latitude: state.latitude,
+    longitude: state.longitude
   }
 }
 

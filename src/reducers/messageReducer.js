@@ -19,7 +19,21 @@ export const showMessage = message => {
       dispatch({
         type: 'REMOVE_MESSAGE'
       })
-    }, 2000)
+    }, 3000)
+  }
+}
+
+export const showLongMessage = message => {
+  return dispatch => {
+    dispatch({
+      type: 'ADD_MESSAGE',
+      message
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'REMOVE_MESSAGE'
+      })
+    }, 10000)
   }
 }
 

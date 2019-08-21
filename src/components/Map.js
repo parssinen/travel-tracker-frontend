@@ -4,7 +4,7 @@ import Logout from './Logout'
 
 const Map = ({ logout }) => (
   <div>
-    <GoogleMaps apiKey={process.env.REACT_APP_MAPS_API_KEY} language={'en'} />
+    <GoogleMaps apiKey={process.env.REACT_APP_MAPS_API_KEY} language={'fi'} />
     <Logout logout={logout} />
   </div>
 )

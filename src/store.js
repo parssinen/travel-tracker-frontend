@@ -10,6 +10,7 @@ import confirmationReducer from './reducers/confirmationReducer'
 import markerFormReducer from './reducers/markerFormReducer'
 import activeMarkerReducer from './reducers/activeMarkerReducer'
 import markerReducer from './reducers/markerReducer'
+import popupReducer from './reducers/popupReducer'
 
 const reducer = combineReducers({
   user: userReducer,
@@ -21,7 +22,8 @@ const reducer = combineReducers({
   confirmation: confirmationReducer,
   markerForm: markerFormReducer,
   activeMarker: activeMarkerReducer,
-  markers: markerReducer
+  markers: markerReducer,
+  popup: popupReducer
 })
 
 const store = createStore(reducer, applyMiddleware(thunk))

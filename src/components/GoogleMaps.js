@@ -8,8 +8,15 @@ import { changeTab } from '../reducers/menuTabReducer'
 import { updateForm } from '../reducers/markerFormReducer'
 import { addActiveMarker } from '../reducers/activeMarkerReducer'
 import { initMarkers, addMarker } from '../reducers/markerReducer'
+import { showMessage } from '../reducers/messageReducer'
 
 export class GoogleMaps extends Component {
+  showMessage = (text, color) =>
+    this.props.showMessage({
+      text,
+      color
+    })
+
   componentDidMount = async () => {
     const data = await markerService.getAll()
     const markers = data.map(marker => {
@@ -22,6 +29,7 @@ export class GoogleMaps extends Component {
       }
     })
     this.props.initMarkers(markers)
+    this.showMessage('Sisällä', 'green')
   }
 
   onMapClick = async (t, map, coord) => {
@@ -119,7 +127,8 @@ const mapDispatchToProps = {
   updateForm,
   addActiveMarker,
   initMarkers,
-  addMarker
+  addMarker,
+  showMessage
 }
 
 const connectedWrapper = connect(

@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/markers'
+const baseUrl = 'http://localhost:3001/api/markers'
 let token = null
 
 const setToken = newToken => {

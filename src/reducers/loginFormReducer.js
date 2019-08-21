@@ -1,4 +1,7 @@
-const reducer = (store = { username: '', password: '' }, action) => {
+const reducer = (
+  store = { username: '', password: '', latitude: '', longitude: '' },
+  action
+) => {
   switch (action.type) {
     case 'LOGIN_LATITUDE':
       return { ...store, latitude: action.latitude }

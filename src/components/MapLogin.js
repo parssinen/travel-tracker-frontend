@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import { connect } from 'react-redux'
-import { Button, Form, Segment } from 'semantic-ui-react'
 import loginService from '../services/login'
 import travelService from '../services/markers'
 import { login } from '../reducers/userReducer'
 import { showMessage } from '../reducers/messageReducer'
+import GoogleMapsLogin from './GoogleMapsLogin'
 import {
   updateLatitude,
   updateLongitude,
@@ -17,14 +17,14 @@ class LoginForm extends Component {
   login = async event => {
     event.preventDefault()
     try {
-      const user = await loginService.login(this.props.user)
+      const user = await loginService.login(this.props.latitude)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       travelService.setToken(user.token)
       this.props.clearForm()
       this.props.login(user)
     } catch (exception) {
       console.log(exception)
-      this.showMessage('Invalid username or password!', 'red')
+      this.showMessage('Väärin meni!', 'red')
     }
   }
 
@@ -36,34 +36,28 @@ class LoginForm extends Component {
 
   updateLatitude = event => this.props.updateLatitude(event.target.value)
 
-  updateLongitude = event => this.props.updateLongitude(event.target.value)
+  updateLongitude = event => {
+    console.log('event', event)
+    this.props.updateLongitude(event.target.value)
+  }
+
+  contextRef = createRef()
 
   render() {
     return (
-      <Form onSubmit={this.login} size="large">
-        <Segment>
-          <Form.Input
-            placeholder="Lat"
-            value={this.props.latitude}
-            onChange={this.updateLatitude}
-          />
-          <Form.Input
-            placeholder="Lon"
-            value={this.props.longitude}
-            onChange={this.updateLongitude}
-          />
-          <Button color="blue" fluid size="large" type="submit">
-            Login
-          </Button>
-        </Segment>
-      </Form>
+      <div>
+        <GoogleMapsLogin
+          apiKey="AIzaSyAAgMyvYX-legEY9KEMwixX_65Ld4h4Uao" //{process.env.REACT_APP_MAPS_API_KEY}
+          language={'fi'}
+        />
+      </div>
     )
   }
 }
 const mapStateToProps = state => {
   return {
     user: state.loginForm,
-    username: state.loginForm.username,
+    username: 'nuotio',
     password: state.loginForm.password
   }
 }
@@ -73,6 +67,8 @@ const mapDispatchToProps = {
   showMessage,
   updateUsername,
   updatePassword,
+  updateLatitude,
+  updateLongitude,
   clearForm
 }
 

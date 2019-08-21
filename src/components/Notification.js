@@ -9,7 +9,8 @@ const Notification = ({ text, color }) =>
         color={color}
         header={text}
         icon={color === 'green' ? 'thumbs up' : 'warning sign'}
-        size='large'
+        size="large"
+        style={{ position: 'fixed', zIndex: '9999999', maxWidth: '400px' }}
       />
     </div>
   ) : null
