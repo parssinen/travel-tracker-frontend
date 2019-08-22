@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
+import { Map, GoogleApiWrapper } from 'google-maps-react'
 import loginService from '../services/login'
 import travelService from '../services/markers'
 import InfoWindow from './InfoWindow'
