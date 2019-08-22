@@ -47,7 +47,7 @@ class LoginForm extends Component {
     return (
       <div>
         <GoogleMapsLogin
-          apiKey="AIzaSyAAgMyvYX-legEY9KEMwixX_65Ld4h4Uao" //{process.env.REACT_APP_MAPS_API_KEY}
+          apiKey={process.env.REACT_APP_MAPS_API_KEY}
           language={'fi'}
         />
       </div>
