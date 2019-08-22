@@ -86,10 +86,12 @@ class InfoWindow extends Component {
     return (
       <div>
         <Confirm
-          header='WARNING!'
-          content={this.emptyForm() ? 'Remove empty marker?' : 'Are you sure?'}
-          cancelButton='Nevermind.'
-          confirmButton="Let's do it!"
+          header="Huom!"
+          content={
+            this.emptyForm() ? 'Poista tyhjä merkintä?' : 'Oletko varma?'
+          }
+          cancelButton="Peruuta"
+          confirmButton="Poista"
           open={this.props.confirmation}
           onCancel={this.closeConfirmation}
           onConfirm={this.removeMarker}
@@ -99,28 +101,28 @@ class InfoWindow extends Component {
           open={this.props.infoWindow}
           onClose={this.onClose}
           scrolling
-          size='small'
+          size="small"
           style={{ marginTop: '-250px' }}
           closeIcon>
           <div>
-            <Menu icon='labeled' widths={3} tabular size='huge' color='blue'>
+            <Menu icon="labeled" widths={3} tabular size="huge" color="blue">
               <Menu.Item
                 active={this.props.menuTab === 'info'}
                 onClick={() => this.props.changeTab('info')}>
-                <Icon name='book' />
-                Info
+                <Icon name="book" />
+                Tiedot
               </Menu.Item>
               <Menu.Item
                 active={this.props.menuTab === 'edit'}
                 onClick={() => this.props.changeTab('edit')}>
-                <Icon name='edit' />
-                Edit
+                <Icon name="edit" />
+                Muokkaa
               </Menu.Item>
               <Menu.Item
                 active={this.props.menuTab === 'remove'}
                 onClick={() => this.props.changeTab('remove')}>
-                <Icon name='trash' />
-                Remove
+                <Icon name="trash" />
+                Poista
               </Menu.Item>
             </Menu>
             <Divider hidden />
@@ -129,9 +131,9 @@ class InfoWindow extends Component {
             {this.props.menuTab === 'info' ? (
               <div>
                 <div>
-                  <Grid centered verticalAlign='middle'>
+                  <Grid centered verticalAlign="middle">
                     <Grid.Row>
-                      <Header as='h1' textAlign='center'>
+                      <Header as="h1" textAlign="center">
                         <Divider hidden />
                         {this.props.formTitle.length > 0
                           ? this.props.activeTitle
@@ -139,31 +141,31 @@ class InfoWindow extends Component {
                       </Header>
                     </Grid.Row>
                     <Grid.Row>
-                      <Header as='h3'>{this.props.activeText}</Header>
+                      <Header as="h3">{this.props.activeText}</Header>
                     </Grid.Row>
                   </Grid>
                 </div>
               </div>
             ) : this.props.menuTab === 'edit' ? (
               <div>
-                <Grid centered verticalAlign='middle'>
+                <Grid centered verticalAlign="middle">
                   <Grid.Column style={{ maxWidth: 450 }}>
-                    <Form onSubmit={this.updateMarker} size='large'>
+                    <Form onSubmit={this.updateMarker} size="large">
                       <Form.Input
-                        name='newTitle'
-                        label='Edit title'
+                        name="newTitle"
+                        label="Kuvaus sijainnista"
                         value={this.props.formTitle}
                         onChange={this.onTitleChange}
                       />
                       <Form.TextArea
-                        name='newText'
-                        label='Additional information'
+                        name="newText"
+                        label="Lisätiedot"
                         value={this.props.formText}
                         rows={4}
                         onChange={this.onTextChange}
                       />
-                      <Button color='blue' fluid size='large' type='submit'>
-                        Update
+                      <Button color="blue" fluid size="large" type="submit">
+                        Tallenna
                       </Button>
                     </Form>
                   </Grid.Column>
@@ -172,14 +174,14 @@ class InfoWindow extends Component {
             ) : (
               <div>
                 <Divider hidden />
-                <Grid padded centered verticalAlign='middle'>
+                <Grid padded centered verticalAlign="middle">
                   <Button
-                    size='large'
-                    centered='top'
-                    color='blue'
-                    type='submit'
+                    size="large"
+                    centered="top"
+                    color="blue"
+                    type="submit"
                     onClick={this.openConfirmation}>
-                    Remove marker
+                    Poista merkintä
                   </Button>
                 </Grid>
                 <Divider hidden />
